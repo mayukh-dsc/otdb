@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OTDB — Old Temples Database
+
+An interactive web app for exploring historically and archaeologically significant temples of India and Southeast Asia across 3,000 years of history.
+
+## Features
+
+- **Interactive Map** — Leaflet map covering India, Cambodia, Indonesia, Myanmar, Thailand, Vietnam, Sri Lanka, and Nepal with clustered temple markers
+- **Time Range Filter** — Draggable dual-handle slider to filter temples by construction date (1000 BC – 2026 AD)
+- **Temple Detail Panel** — Click any temple to view images, dates, dynasty, architectural style, history, and architecture notes
+- **Color-coded markers** — Hindu (orange), Buddhist (yellow), Jain (green)
+
+## Tech Stack
+
+- **Next.js 16** (App Router) with TypeScript
+- **Leaflet.js** + react-leaflet + react-leaflet-cluster
+- **Tailwind CSS v4**
+- **OpenStreetMap** tiles (free)
+
+## Data
+
+128 curated temples sourced from:
+- **Wikidata** (SPARQL) — coordinates, dates, architectural styles, images
+- **Wikipedia** — descriptions, history, and architecture sections
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Data Pipeline
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To re-seed the temple data from scratch:
 
-## Learn More
+```bash
+# 1. Pull raw data from Wikidata
+npx tsx scripts/seed-from-wikidata.ts
 
-To learn more about Next.js, take a look at the following resources:
+# 2. Curate top temples and enrich from Wikipedia
+npx tsx scripts/curate-temples.ts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 3. Fix descriptions and religions
+npx tsx scripts/fix-descriptions.ts
+npx tsx scripts/fix-religions.ts
+npx tsx scripts/cleanup-data.ts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 4. Convert image URLs to direct thumbnails
+npx tsx scripts/fix-image-urls.ts
+```
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
