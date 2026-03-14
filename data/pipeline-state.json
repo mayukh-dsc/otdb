@@ -1,0 +1,34 @@
+{
+  "dataVersion": "1.1.0",
+  "schemaVersion": "1.0.0",
+  "lastFullRun": "2026-03-14T08:56:04.632Z",
+  "sources": {
+    "asi": {
+      "lastRun": null,
+      "templesUpdated": 0
+    },
+    "wikidata": {
+      "lastRun": "2026-03-14T08:56:04.609Z",
+      "templesUpdated": 1
+    },
+    "wikipedia": {
+      "lastRun": null,
+      "templesUpdated": 0
+    },
+    "commons": {
+      "lastRun": null,
+      "templesUpdated": 0
+    },
+    "data-gov": {
+      "lastRun": null,
+      "templesUpdated": 0
+    }
+  },
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-03-14",
+      "summary": "Pipeline run: 1 temples updated"
+    }
+  ]
+}

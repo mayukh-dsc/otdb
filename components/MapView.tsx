@@ -24,16 +24,18 @@ function createTempleIcon(religion: string): L.DivIcon {
   const color = getReligionColor(religion);
   return L.divIcon({
     className: "custom-marker",
-    html: `<div style="
-      background: ${color};
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 2px solid white;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-    "></div>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
+    html: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 24 30" style="filter: drop-shadow(0 1px 3px rgba(0,0,0,0.35));">
+      <g fill="${color}" stroke="white" stroke-width="1.2" stroke-linejoin="round">
+        <circle cx="12" cy="3" r="2"/>
+        <path d="M7 14 L12 5 L17 14Z"/>
+        <rect x="5" y="14" width="14" height="10"/>
+        <rect x="3" y="24" width="18" height="4" rx="1"/>
+      </g>
+      <path d="M9.5 28 V20.5 Q12 17.5 14.5 20.5 V28Z" fill="white" stroke="none"/>
+    </svg>`,
+    iconSize: [24, 30],
+    iconAnchor: [12, 30],
+    popupAnchor: [0, -30],
   });
 }
 
@@ -120,6 +122,12 @@ export default function MapView({
                     {temple.yearBuiltApproximate && " (approx.)"}
                   </div>
                 )}
+                <a
+                  href={`/temple/${temple.id}`}
+                  className="inline-block mt-1 text-xs text-amber-700 hover:text-amber-900 font-medium"
+                >
+                  View details &rarr;
+                </a>
               </div>
             </Popup>
           </Marker>

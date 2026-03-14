@@ -63,6 +63,18 @@ export default function Home() {
             </span>{" "}
             of {temples.length} temples
           </span>
+          <a
+            href="/handbook"
+            className="hidden sm:inline text-stone-400 hover:text-amber-400 transition-colors"
+          >
+            Handbook
+          </a>
+          <a
+            href="/temples"
+            className="hidden sm:inline text-stone-400 hover:text-amber-400 transition-colors"
+          >
+            Browse
+          </a>
           <Legend />
         </div>
       </header>

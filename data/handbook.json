@@ -1,0 +1,342 @@
+[
+  {
+    "slug": "garbhagriha",
+    "name": "Garbhagriha",
+    "originalTerm": "Garbha Griha (Sanskrit: womb chamber)",
+    "category": "anatomy",
+    "shortDescription": "The innermost sanctum of a Hindu temple, housing the primary deity. Usually a small, dark, windowless chamber.",
+    "fullDescription": "The Garbhagriha (literally 'womb house') is the most sacred space in a Hindu temple. It is typically a small square chamber without windows, designed to create an intimate, cave-like atmosphere for communion with the divine. The walls are thick to support the superstructure (vimana or shikhara) above. Only priests typically enter this space. The darkness is intentional — representing the cosmic womb from which creation emerges.",
+    "icon": "garbhagriha",
+    "graphTag": "feature:garbhagriha"
+  },
+  {
+    "slug": "mandapa",
+    "name": "Mandapa",
+    "originalTerm": "Mandapa (Sanskrit: pavilion)",
+    "category": "anatomy",
+    "shortDescription": "A pillared hall used for gatherings, rituals, dance, and music. Temples may have multiple mandapas of different sizes.",
+    "fullDescription": "Mandapa refers to the pillared halls that form the body of the temple between the entrance and the sanctum. A large temple may have several: the Mukha-mandapa (entrance hall), Maha-mandapa (great hall), and Ardha-mandapa (half hall connecting to the sanctum). The mandapa's pillars are often elaborately carved with mythological scenes. The number and size of mandapas is a key indicator of a temple's importance.",
+    "icon": "mandapa",
+    "graphTag": "feature:mandapa"
+  },
+  {
+    "slug": "vimana",
+    "name": "Vimana",
+    "originalTerm": "Vimana (Sanskrit: measured out)",
+    "category": "anatomy",
+    "shortDescription": "The towering superstructure above the sanctum in Dravida (South Indian) temples. A stepped pyramidal tower.",
+    "fullDescription": "The Vimana is the main tower rising above the garbhagriha in Dravidian-style temples. Unlike the curved shikhara of North India, the vimana is a stepped pyramid made of progressively smaller stories (talas). The number of talas, the proportions, and the crowning element (stupi) follow precise rules from Agama texts. The vimana at Brihadeshwara Temple in Thanjavur rises 66 meters and is one of the tallest in India.",
+    "icon": "vimana",
+    "graphTag": "feature:vimana"
+  },
+  {
+    "slug": "shikhara",
+    "name": "Shikhara",
+    "originalTerm": "Shikhara (Sanskrit: mountain peak)",
+    "category": "anatomy",
+    "shortDescription": "The curvilinear tower above the sanctum in Nagara (North Indian) temples. Symbolizes Mount Meru.",
+    "fullDescription": "The Shikhara is the tall, curving spire that rises above the sanctum in Nagara-style temples. Its form represents Mount Meru, the cosmic mountain at the center of the universe in Hindu cosmology. There are several sub-types: Rekha (single curved spire), Phamsana (stepped pyramid), and Valabhi (barrel-vaulted). The surface is often covered with miniature replicas of itself (anga-shikharas), creating a fractal-like visual effect.",
+    "icon": "shikhara",
+    "graphTag": "feature:shikhara"
+  },
+  {
+    "slug": "gopuram",
+    "name": "Gopuram",
+    "originalTerm": "Gopuram (Tamil: gateway tower)",
+    "category": "anatomy",
+    "shortDescription": "The monumental gateway tower at the entrance of Dravidian temple complexes. Often taller than the main vimana.",
+    "fullDescription": "Gopurams are the towering gateways that mark the entrances to South Indian temple complexes. In later Dravidian architecture (particularly Vijayanagara and Nayaka periods), gopurams grew to dwarf the main vimana, becoming the dominant visual element. They are rectangular in plan, tapering as they rise, and covered with brightly painted stucco sculptures of gods, demons, and mythological scenes. Madurai Meenakshi Temple has 14 gopurams, the tallest reaching 52 meters.",
+    "icon": "gopuram",
+    "graphTag": "feature:gopuram"
+  },
+  {
+    "slug": "prakara",
+    "name": "Prakara",
+    "originalTerm": "Prakara (Sanskrit: enclosure)",
+    "category": "anatomy",
+    "shortDescription": "The enclosure wall and covered circumambulatory corridor around a temple. Large temples have multiple concentric prakaras.",
+    "fullDescription": "The Prakara is the enclosure wall that defines the sacred boundary of the temple compound. It often includes a covered corridor used for pradakshina (circumambulation). Major temples like Srirangam have seven concentric prakaras, creating a city-within-a-city effect. The prakara walls may contain subsidiary shrines, mandapas, and water tanks.",
+    "icon": "prakara",
+    "graphTag": "feature:prakara"
+  },
+  {
+    "slug": "nagara",
+    "name": "Nagara Style",
+    "originalTerm": "Nagara (Sanskrit: of the city)",
+    "category": "style",
+    "shortDescription": "The North Indian temple architectural style, characterized by a curvilinear shikhara tower and a square sanctum.",
+    "fullDescription": "Nagara is one of the three main styles of Hindu temple architecture, prevalent in North India from the Gupta period (5th century CE) onward. Key features: a curvilinear shikhara over the sanctum, a square plan, no enclosure walls (unlike Dravida), and an elevated platform (jagati). Sub-styles include Latina (single spire), Sekhari (spire with subsidiary spirelets), and Bhumija (spire with miniature spires in horizontal rows). Major examples include Khajuraho, Konark, and Lingaraja Temple.",
+    "icon": "nagara",
+    "graphTag": "style:nagara"
+  },
+  {
+    "slug": "dravida",
+    "name": "Dravida Style",
+    "originalTerm": "Dravida (Sanskrit: southern)",
+    "category": "style",
+    "shortDescription": "The South Indian temple style with a stepped pyramidal vimana, rectangular compound, gopuram gateways, and temple tank.",
+    "fullDescription": "Dravida architecture is the dominant temple style of South India, developed by the Pallava, Chola, Pandya, Vijayanagara, and Nayaka dynasties over 1,500 years. Defining features: a stepped pyramidal vimana (not curved), rectangular compound with multiple concentric enclosures (prakaras), monumental gopuram gateways, pillared mandapas, and a temple tank (pushkarini). Construction is primarily in granite. The Great Living Chola Temples (Brihadeshwara, Gangaikonda Cholapuram, Airavatesvara) are the pinnacle of this style.",
+    "icon": "dravida",
+    "graphTag": "style:dravida"
+  },
+  {
+    "slug": "vesara",
+    "name": "Vesara Style",
+    "originalTerm": "Vesara (Sanskrit: hybrid)",
+    "category": "style",
+    "shortDescription": "A hybrid style blending Nagara and Dravida elements, found primarily in the Deccan Plateau (Karnataka, Maharashtra).",
+    "fullDescription": "Vesara architecture combines elements of both northern Nagara and southern Dravida styles. It emerged in the Deccan under the Chalukyas of Badami (6th-8th century) and reached its zenith under the Hoysalas (12th-13th century). Characteristics: stellate (star-shaped) plans, intricately carved soapstone exteriors, lathe-turned pillars, and low-profile towers. Major examples: Hoysaleswara Temple (Halebidu), Chennakesava Temple (Belur), and the temples at Pattadakal.",
+    "icon": "vesara",
+    "graphTag": "style:vesara"
+  },
+  {
+    "slug": "khmer",
+    "name": "Khmer Style",
+    "originalTerm": "Khmer Architecture",
+    "category": "style",
+    "shortDescription": "The temple-mountain architecture of the Khmer Empire (Cambodia), featuring concentric galleries, causeways, and tower clusters.",
+    "fullDescription": "Khmer temple architecture developed from the 9th to 13th centuries CE in the Angkor region of Cambodia. It centers on the concept of the temple-mountain (representing Mount Meru), built with laterite cores and sandstone cladding. Key features: quincunx tower arrangements (five towers in a dice pattern), concentric galleries, long causeways over moats, and elaborate bas-relief narrative walls. Angkor Wat, the largest religious monument ever built, is the supreme example. Khmer architecture shows strong influence from Indian temple traditions, adapted to local materials and cosmology.",
+    "icon": "khmer",
+    "graphTag": "style:khmer"
+  },
+  {
+    "slug": "kalinga",
+    "name": "Kalinga Style",
+    "originalTerm": "Kalinga Architecture",
+    "category": "style",
+    "shortDescription": "The temple style of Odisha featuring a deul (tower) over the sanctum and a jagamohana (assembly hall).",
+    "fullDescription": "Kalinga architecture is the regional Nagara variant found in Odisha (ancient Kalinga). Temples consist of a deul (curved tower over the sanctum) and a jagamohana (rectangular assembly hall). The deul comes in three sub-types: Rekha (curvilinear, tallest), Pidha (stepped pyramid), and Khakhara (barrel-vaulted). Exteriors are divided into horizontal and vertical sections (pagas) filled with sculptures. The Lingaraja Temple, Jagannath Temple, and Konark Sun Temple are masterpieces of this style.",
+    "icon": "kalinga",
+    "graphTag": "style:kalinga"
+  },
+  {
+    "slug": "dry-fit",
+    "name": "Dry-fit Construction",
+    "originalTerm": "Sushka Bandha",
+    "category": "technique",
+    "shortDescription": "Stones joined without any mortar or binding agent, relying on precise cutting, gravity, and sometimes interlocking joints.",
+    "fullDescription": "Dry-fit (or dry-stone) construction is a technique where stone blocks are cut to such precision that they hold together through gravity and friction alone, with no mortar. Many Indian granite temples use this method, which provides remarkable earthquake resistance — blocks can shift slightly during tremors and resettle. The Chola temples of Tamil Nadu are outstanding examples: the Brihadeshwara Temple's 66-meter vimana is entirely dry-fit granite. This technique requires extraordinary precision in stone cutting — tolerances can be less than a millimeter.",
+    "icon": "dry-fit",
+    "graphTag": "technique:dry-fit"
+  },
+  {
+    "slug": "corbelling",
+    "name": "Corbelling",
+    "originalTerm": "Corbelled Arch",
+    "category": "technique",
+    "shortDescription": "A technique where each successive course of stone projects beyond the one below, creating an arch or dome without a true keystone.",
+    "fullDescription": "Corbelling is the primary method ancient Indian builders used to span openings and create domed ceilings without the true arch (which was known but rarely used in Hindu temple architecture). Each horizontal course of stone extends slightly inward from the one below until the courses meet at the top. This creates a stepped pseudo-dome or pseudo-arch. While structurally less efficient than a true arch, corbelling is extremely durable — many corbelled ceilings have survived over 1,000 years. The technique limits maximum spans to about 3-4 meters in stone construction.",
+    "icon": "corbelling",
+    "graphTag": "technique:corbelling"
+  },
+  {
+    "slug": "post-and-lintel",
+    "name": "Post-and-Lintel",
+    "originalTerm": "Trabeate System",
+    "category": "technique",
+    "shortDescription": "The fundamental structural system of Indian temples: vertical pillars (posts) supporting horizontal beams (lintels).",
+    "fullDescription": "Post-and-lintel (trabeate) construction is the dominant structural system in Indian temple architecture. Vertical stone pillars support horizontal stone beams, which in turn support the roof and tower above. This system avoids the use of arches or vaults. The limitation is span — stone lintels can only bridge about 2-3 meters before they crack under their own weight. This constraint drives the dense pillar forests seen in mandapas, where hundreds of pillars may be needed to support a large roof. Despite this limitation, builders achieved remarkable heights (66m at Brihadeshwara) through careful load distribution.",
+    "icon": "post-and-lintel",
+    "graphTag": "technique:post-and-lintel"
+  },
+  {
+    "slug": "iron-dowels",
+    "name": "Iron Dowel Joinery",
+    "originalTerm": "Loha Bandha",
+    "category": "technique",
+    "shortDescription": "Iron pins or clamps inserted into stone blocks to lock them together, providing additional structural integrity.",
+    "fullDescription": "Iron dowels and clamps were used in Indian temple construction to lock stone blocks together, particularly at structurally critical points like tower tops, lintel-to-pillar joints, and wall corners. The iron was often sealed with molten lead to prevent rusting. This technique is found in temples from the Gupta period onward. Some temples also used iron beams as hidden structural reinforcement within stone walls. The remarkable rust-resistance of ancient Indian iron (as seen in the Iron Pillar of Delhi) suggests advanced metallurgical knowledge.",
+    "icon": "iron-dowels",
+    "graphTag": "technique:iron-dowels"
+  },
+  {
+    "slug": "granite",
+    "name": "Granite",
+    "originalTerm": "Karungal (Tamil)",
+    "category": "material",
+    "shortDescription": "The primary building material for South Indian temples. Extremely hard, weather-resistant, and excellent for structural loads.",
+    "fullDescription": "Granite is the signature material of Dravidian temple architecture, particularly in Tamil Nadu and Karnataka. Its extreme hardness (7 on the Mohs scale) makes it exceptionally durable but very difficult to carve — requiring skilled craftsmen and prolonged effort. Granite's compressive strength (100-250 MPa) allows it to support the massive loads of vimana towers. The Chola builders quarried granite from nearby hills, transported it using elephants and rollers, and achieved extraordinary precision in cutting despite the material's hardness. Most South Indian granite temples have survived over 1,000 years with minimal structural degradation.",
+    "icon": "granite",
+    "graphTag": "material:granite"
+  },
+  {
+    "slug": "sandstone",
+    "name": "Sandstone",
+    "originalTerm": "Baluapatthar (Hindi)",
+    "category": "material",
+    "shortDescription": "The preferred material for North Indian temples. Easier to carve than granite, allowing the intricate sculptural programs of Nagara temples.",
+    "fullDescription": "Sandstone is the dominant material in Nagara-style temples across North and Central India. Available in buff, pink, pale yellow, and red varieties, sandstone is relatively soft when freshly quarried and hardens with exposure to air, making it ideal for intricate carving. The Khajuraho temples, Konark Sun Temple, and the temples of Rajasthan all use sandstone. However, sandstone is less weather-resistant than granite — many sandstone temples show significant erosion, particularly from monsoon rains. Its lower compressive strength also limits structural heights compared to granite.",
+    "icon": "sandstone",
+    "graphTag": "material:sandstone"
+  },
+  {
+    "slug": "laterite",
+    "name": "Laterite",
+    "originalTerm": "Vettukal (Malayalam: cuttable stone)",
+    "category": "material",
+    "shortDescription": "A tropical iron-rich stone that is soft when quarried and hardens on exposure. Used in Kerala, Goa, and Southeast Asian temples.",
+    "fullDescription": "Laterite is a reddish, porous stone formed by tropical weathering of basalt. Its unique property: it is soft and easily cut when freshly extracted from the ground, but hardens significantly when exposed to air and sun. This makes it an ideal building material in tropical regions. In Khmer architecture, laterite was used as the structural core of temples (hidden behind sandstone cladding). In Kerala and Goa, laterite is the primary building stone. Its porosity helps with natural moisture regulation inside buildings.",
+    "icon": "laterite",
+    "graphTag": "material:laterite"
+  },
+  {
+    "slug": "soapstone",
+    "name": "Soapstone / Chlorite Schist",
+    "originalTerm": "Kalli Kallu (Kannada)",
+    "category": "material",
+    "shortDescription": "A very soft stone used by Hoysala builders for extraordinarily detailed carvings. Hardens over time after exposure.",
+    "fullDescription": "Chlorite schist (commonly called soapstone) is the signature material of Hoysala temple architecture in Karnataka. Extremely soft when freshly quarried (2-3 on the Mohs scale), it can be carved with the precision of wood or ivory. Over centuries of exposure, it hardens significantly. This property allowed Hoysala sculptors to create the most intricately detailed temple carvings in all of Indian architecture — at Belur, Halebidu, and Somnathpur, the level of detail is often compared to jewellery work rather than architecture.",
+    "icon": "soapstone",
+    "graphTag": "material:soapstone"
+  },
+  {
+    "slug": "temple-tank",
+    "name": "Temple Tank",
+    "originalTerm": "Pushkarini / Kalyani / Teppakulam",
+    "category": "water",
+    "shortDescription": "A sacred water tank built within or adjacent to the temple complex, used for ritual bathing and rainwater harvesting.",
+    "fullDescription": "Temple tanks (Pushkarini in Sanskrit, Kalyani in Kannada, Teppakulam in Tamil) are integral to Indian temple architecture. They serve religious purposes (ritual bathing before worship), practical purposes (rainwater harvesting, groundwater recharge), and aesthetic purposes (reflecting the temple in water). Many are architectural marvels: stepped stone walls (ghats) descending to the water, with mandapas and shrines at the corners. The tank at Chidambaram Nataraja Temple and the Mariamman Teppakulam at Madurai are outstanding examples.",
+    "icon": "temple-tank",
+    "graphTag": "water:temple-tank"
+  },
+  {
+    "slug": "moat",
+    "name": "Temple Moat",
+    "originalTerm": "Parikha (Sanskrit: water trench)",
+    "category": "water",
+    "shortDescription": "A water-filled channel surrounding the temple complex, serving both protective and symbolic purposes.",
+    "fullDescription": "Some major temples were surrounded by water moats, serving multiple functions: physical protection, symbolic representation of the cosmic ocean, and practical water management. Angkor Wat's moat is 190 meters wide and 5.5 km in total length. The Brihadeshwara Temple at Thanjavur originally had a moat (now filled). Temple moats are fed by rivers, canals, or rainwater harvesting systems, and often integrated with the broader irrigation infrastructure of the region.",
+    "icon": "moat",
+    "graphTag": "water:moat"
+  },
+  {
+    "slug": "drainage-system",
+    "name": "Drainage System",
+    "originalTerm": "Pranala (Sanskrit: water channel)",
+    "category": "water",
+    "shortDescription": "Engineered channels for draining ritual water (abhisheka) and rainwater from the temple structure.",
+    "fullDescription": "Indian temples feature sophisticated drainage systems. The pranala is a carved stone spout that carries away the water used in deity bathing rituals (abhisheka) from the sanctum through the north wall. Beyond ritual drainage, temples have elaborate rainwater management: gargoyle spouts (makara-pranala, shaped as mythical creatures), stone channels carved into floors, and underground conduits. The Khajuraho temples have a complex underground drainage network. These systems prevented water damage and managed monsoon runoff across the temple platform.",
+    "icon": "drainage",
+    "graphTag": "water:drainage"
+  },
+  {
+    "slug": "step-well",
+    "name": "Step-well",
+    "originalTerm": "Vav / Baoli / Pushkarani",
+    "category": "water",
+    "shortDescription": "A deep well with stone steps descending to the water level, combining water access with architectural grandeur.",
+    "fullDescription": "Step-wells (Vav in Gujarati, Baoli in Hindi) are subterranean water structures with flights of steps leading down to the water level. While not exclusively temple features, many are attached to temple complexes. They serve as water sources during dry seasons and as cool retreats from the heat. The Rani ki Vav at Patan (Gujarat), a UNESCO World Heritage Site, is 64 meters long, 20 meters wide, and 27 meters deep, with over 500 sculptural panels. Step-wells represent a unique fusion of engineering (accessing the water table) and architecture.",
+    "icon": "step-well",
+    "graphTag": "water:step-well"
+  },
+  {
+    "slug": "stellate-plan",
+    "name": "Stellate Plan",
+    "originalTerm": "Star-shaped ground plan",
+    "category": "plan",
+    "shortDescription": "A star-shaped ground plan with alternating projections and recesses, characteristic of Hoysala temples.",
+    "fullDescription": "The stellate (star-shaped) plan is the signature innovation of Hoysala architecture (12th-13th century CE, Karnataka). Instead of a simple square or rectangular plan, the walls zigzag in and out creating a star pattern with 16, 24, or 32 points. This dramatically increases the wall surface area available for sculpture — a Hoysala temple may have 10x more carved surface than a square temple of the same footprint. The plan also creates complex interior spaces with multiple axes of symmetry. Chennakesava Temple at Belur and Hoysaleswara Temple at Halebidu are the finest examples.",
+    "icon": "stellate",
+    "graphTag": "plan:stellate"
+  },
+  {
+    "slug": "square-plan",
+    "name": "Square Plan",
+    "originalTerm": "Chaturastra (Sanskrit: four-sided)",
+    "category": "plan",
+    "shortDescription": "The most common temple plan in India, based on the sacred geometry of the Vastu Purusha Mandala.",
+    "fullDescription": "The square plan is the fundamental unit of Hindu temple architecture, derived from the Vastu Purusha Mandala — a sacred diagram that maps cosmic principles onto a square grid. The sanctum is almost always square, and many entire temple complexes are organized on square or rectangular grids. The square represents completeness and cosmic order in Hindu philosophy. Variations include single-square plans (eka-tala), nested squares (multi-prakara complexes), and square plans with projections (ratha-style offsets on each side).",
+    "icon": "square",
+    "graphTag": "plan:square"
+  },
+  {
+    "slug": "apsidal-plan",
+    "name": "Apsidal Plan",
+    "originalTerm": "Gajaprishtha (Sanskrit: elephant-backed)",
+    "category": "plan",
+    "shortDescription": "A plan with one curved end (like a horseshoe), found in early Buddhist chaitya halls and some early Hindu temples.",
+    "fullDescription": "The apsidal plan has a curved or semicircular end, resembling the cross-section of a barrel vault. It is characteristic of early Buddhist chaitya halls (prayer halls with a stupa at the curved end), where the curved wall directs the circumambulation path. Early examples include the rock-cut chaityas at Ajanta, Karla, and Bhaja (2nd century BCE – 2nd century CE). Some early Hindu temples also adopted this plan before the square plan became dominant. The apsidal form may derive from earlier timber architecture.",
+    "icon": "apsidal",
+    "graphTag": "plan:apsidal"
+  },
+  {
+    "slug": "cruciform-plan",
+    "name": "Cruciform Plan",
+    "originalTerm": "Cross-shaped ground plan",
+    "category": "plan",
+    "shortDescription": "A cross-shaped plan with projecting arms on all four sides, creating a symmetrical layout.",
+    "fullDescription": "The cruciform plan features projecting sections on all four cardinal directions, creating a cross shape. In Indian temple architecture, this often results from adding transepts or subsidiary shrines on the north and south sides of a primarily east-west oriented temple. The Kandariya Mahadeva Temple at Khajuraho and several Chalukyan temples at Pattadakal feature cruciform or near-cruciform plans. This plan type maximizes the number of cardinal-oriented entrances and sculptural niches.",
+    "icon": "cruciform",
+    "graphTag": "plan:cruciform"
+  },
+  {
+    "slug": "solar-alignment",
+    "name": "Solar Alignment",
+    "originalTerm": "Surya Siddhanta principles",
+    "category": "environmental",
+    "shortDescription": "Temples precisely oriented so sunlight enters the sanctum on specific dates, often equinoxes or festival days.",
+    "fullDescription": "Many Indian temples demonstrate precise astronomical alignment. The most common is east-west orientation so the rising sun illuminates the sanctum. Some temples are aligned to specific solar events: at Konark Sun Temple, sunlight enters through the main entrance at the equinox. At Angkor Wat, the sun rises directly over the central tower on the spring equinox. At Virupaksha Temple, Hampi, the setting sun on the equinox projects a shadow of the gopuram onto the sanctum wall. These alignments required sophisticated astronomical knowledge and precise surveying.",
+    "icon": "solar-alignment",
+    "graphTag": "environmental:solar-alignment"
+  },
+  {
+    "slug": "acoustic-design",
+    "name": "Acoustic Engineering",
+    "originalTerm": "Nada Brahma (sound is divine)",
+    "category": "environmental",
+    "shortDescription": "Temples with deliberately engineered sound properties: resonating chambers, musical pillars, echo effects.",
+    "fullDescription": "Some Indian temples demonstrate sophisticated acoustic engineering. The most famous examples are the musical pillars at Hampi's Vittala Temple — stone pillars that produce distinct musical notes (sa, ri, ga, ma, pa, da, ni) when struck. The Airavatesvara Temple at Darasuram has 'singing steps' that produce musical tones. Many sanctums are designed as resonating chambers that amplify the priest's chanting. The mandapas of some temples have vaulted ceilings that create specific echo patterns. Whether these acoustic properties were always deliberate or sometimes emergent is debated, but the musical pillars clearly demonstrate intentional acoustic engineering.",
+    "icon": "acoustic",
+    "graphTag": "environmental:acoustic"
+  },
+  {
+    "slug": "passive-cooling",
+    "name": "Passive Cooling",
+    "originalTerm": "Natural thermal regulation",
+    "category": "environmental",
+    "shortDescription": "Thick stone walls, high ceilings, narrow corridors, and water features that keep temple interiors cool without any mechanical system.",
+    "fullDescription": "Indian temples in hot climates demonstrate sophisticated passive cooling strategies. Thick granite walls (often 1-3 meters) provide massive thermal mass — absorbing heat during the day and radiating it slowly at night. High ceilings in mandapas allow hot air to rise. Narrow corridors (prakaras) channel breezes. Water bodies (temple tanks, moats) provide evaporative cooling. Small or absent windows in the sanctum maintain a stable, cool temperature. Rock-cut cave temples (Ajanta, Ellora, Elephanta) exploit the natural insulation of the surrounding rock. In a 45°C Tamil Nadu summer, the interior of a granite temple can be 10-15°C cooler than outside.",
+    "icon": "passive-cooling",
+    "graphTag": "environmental:passive-cooling"
+  },
+  {
+    "slug": "rock-cut",
+    "name": "Rock-cut Architecture",
+    "originalTerm": "Guha / Lena (cave temple)",
+    "category": "technique",
+    "shortDescription": "Temples carved directly into cliff faces or boulders — subtractive architecture where material is removed, not assembled.",
+    "fullDescription": "Rock-cut architecture involves carving temples directly out of living rock — the opposite of built construction. India has the world's richest tradition of rock-cut architecture, spanning from the 3rd century BCE (Barabar Caves) to the 8th century CE (Kailasa Temple, Ellora). The Kailasa Temple is the most extraordinary example: a complete freestanding temple carved top-down from a single basalt cliff, with an estimated 200,000 tons of rock removed. Rock-cut temples are inherently earthquake-resistant since they are part of the bedrock. The technique requires visualizing the entire temple in reverse — mistakes cannot be corrected.",
+    "icon": "rock-cut",
+    "graphTag": "technique:rock-cut"
+  },
+  {
+    "slug": "ramp-construction",
+    "name": "Ramp Construction",
+    "originalTerm": "Earthen ramp elevation technique",
+    "category": "technique",
+    "shortDescription": "The method of building massive earth ramps to haul stone blocks to height, then removing the ramp after completion.",
+    "fullDescription": "Ancient Indian builders used enormous earthen ramps to transport heavy stone blocks to the top of tall temple towers. The most famous case is the Brihadeshwara Temple, where a 6 km long ramp was reportedly built to haul the 80-ton capstone to the 66-meter summit. The ramp was then dismantled after construction. Evidence of ramp construction includes: the village of Sarapallam ('slope village') 6 km from Thanjavur (marking the ramp's starting point), and the gradual slope of the terrain in that direction. This technique is analogous to the ramp theories proposed for Egyptian pyramid construction.",
+    "icon": "ramp",
+    "graphTag": "technique:ramp"
+  },
+  {
+    "slug": "lime-mortar",
+    "name": "Lime Mortar",
+    "originalTerm": "Surkhi / Chunam",
+    "category": "material",
+    "shortDescription": "A binding agent made from lime (calcium oxide) mixed with sand or brick dust, used to bond stone or brick in some temple traditions.",
+    "fullDescription": "Lime mortar is a binding agent made by burning limestone to produce quicklime, then mixing with water, sand, and sometimes brick dust (surkhi) or jaggery for added strength. While many South Indian granite temples use dry-fit construction, brick temples (particularly in Bengal, Bihar, and some Southeast Asian sites) rely on lime mortar. Some traditions added organic additives: jaggery (palm sugar), kadukkai (myrobalan fruit), egg white, or even pulses to improve bonding and water resistance. Mughal and Islamic architecture in India uses highly refined lime-based plasters (chunam) that can be polished to a marble-like finish.",
+    "icon": "lime-mortar",
+    "graphTag": "material:lime-mortar"
+  },
+  {
+    "slug": "brick",
+    "name": "Brick Construction",
+    "originalTerm": "Ishtika (Sanskrit: brick)",
+    "category": "material",
+    "shortDescription": "Fired clay bricks used in temple construction, particularly in Bengal, Bihar, and early Southeast Asian temples.",
+    "fullDescription": "Brick is one of the oldest building materials in the Indian subcontinent, used from the Indus Valley Civilization onward. In temple architecture, brick is dominant in regions without suitable building stone: Bengal (terracotta temples like Bishnupur), Bihar (Nalanda), and early Southeast Asian temples (pre-Angkorian Cambodia, Champa in Vietnam, Prambanan in Java). Indian brick temples often feature elaborate terracotta ornamentation — scenes from epics and daily life pressed into clay panels before firing. The remarkable Ananda Temple at Bagan (Myanmar) and the Cham towers of Vietnam demonstrate the spread of Indian brick temple technology across Southeast Asia.",
+    "icon": "brick",
+    "graphTag": "material:brick"
+  }
+]

@@ -1,14 +1,20 @@
-import { NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
+import { NextRequest, NextResponse } from "next/server";
+import { queryTemples, type QueryFilters } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
-  const filePath = join(process.cwd(), "data", "temples.json");
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+
+  const filters: QueryFilters = {};
+  if (searchParams.has("religion")) filters.religion = searchParams.get("religion")!;
+  if (searchParams.has("country")) filters.country = searchParams.get("country")!;
+  if (searchParams.has("style")) filters.style = searchParams.get("style")!;
+  if (searchParams.get("hasVisualization") === "true") filters.hasVisualization = true;
+  if (searchParams.has("tag")) filters.tag = searchParams.get("tag")!;
+
   try {
-    const raw = readFileSync(filePath, "utf-8");
-    const temples = JSON.parse(raw);
+    const temples = queryTemples(Object.keys(filters).length > 0 ? filters : undefined);
     return NextResponse.json(temples);
   } catch {
     return NextResponse.json([], { status: 200 });

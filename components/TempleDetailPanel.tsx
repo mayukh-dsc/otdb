@@ -74,6 +74,12 @@ export default function TempleDetailPanel({
               </span>
             )}
           </div>
+          <a
+            href={`/temple/${temple.id}`}
+            className="inline-flex items-center gap-1 mt-2 px-3 py-1 text-xs font-medium text-amber-700 bg-amber-50 rounded-full hover:bg-amber-100 transition-colors"
+          >
+            Full Visualization &rarr;
+          </a>
         </div>
         <button
           onClick={onClose}
