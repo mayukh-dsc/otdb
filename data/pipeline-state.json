@@ -1,23 +1,23 @@
 {
-  "dataVersion": "1.1.0",
+  "dataVersion": "1.2.0",
   "schemaVersion": "1.0.0",
-  "lastFullRun": "2026-03-14T08:56:04.632Z",
+  "lastFullRun": "2026-03-14T09:27:57.564Z",
   "sources": {
     "asi": {
       "lastRun": null,
       "templesUpdated": 0
     },
     "wikidata": {
-      "lastRun": "2026-03-14T08:56:04.609Z",
-      "templesUpdated": 1
+      "lastRun": "2026-03-14T09:18:37.723Z",
+      "templesUpdated": 128
     },
     "wikipedia": {
-      "lastRun": null,
-      "templesUpdated": 0
+      "lastRun": "2026-03-14T09:19:40.608Z",
+      "templesUpdated": 11
     },
     "commons": {
-      "lastRun": null,
-      "templesUpdated": 0
+      "lastRun": "2026-03-14T09:27:57.536Z",
+      "templesUpdated": 98
     },
     "data-gov": {
       "lastRun": null,
@@ -25,6 +25,11 @@
     }
   },
   "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-03-14",
+      "summary": "Pipeline run: 237 temples updated"
+    },
     {
       "version": "1.1.0",
       "date": "2026-03-14",
