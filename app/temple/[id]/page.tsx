@@ -36,7 +36,7 @@ export default function TempleDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+      <div className="min-h-screen bg-stone-950 flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -44,9 +44,9 @@ export default function TempleDetailPage() {
 
   if (!temple) {
     return (
-      <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold text-stone-900">Temple not found</h1>
-        <Link href="/" className="text-amber-600 hover:text-amber-700">
+      <div className="min-h-screen bg-stone-950 flex flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl font-bold text-white">Temple not found</h1>
+        <Link href="/" className="text-amber-500 hover:text-amber-400">
           Back to map
         </Link>
       </div>
@@ -58,42 +58,39 @@ export default function TempleDetailPage() {
     : null;
 
   const religionColors: Record<string, string> = {
-    Hindu: "bg-orange-100 text-orange-800",
-    Buddhist: "bg-yellow-100 text-yellow-800",
-    Jain: "bg-green-100 text-green-800",
-    Other: "bg-blue-100 text-blue-800",
+    Hindu: "bg-orange-500/20 text-orange-400 ring-orange-500/30",
+    Buddhist: "bg-yellow-500/20 text-yellow-400 ring-yellow-500/30",
+    Jain: "bg-green-500/20 text-green-400 ring-green-500/30",
+    Other: "bg-blue-500/20 text-blue-400 ring-blue-500/30",
   };
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-stone-950">
       {/* Header */}
-      <header className="bg-stone-900 border-b border-stone-700">
-        <div className="max-w-5xl mx-auto px-4 py-6">
+      <header className="border-b border-stone-800">
+        <div className="max-w-5xl mx-auto px-5 py-6">
           <div className="flex items-center gap-3 mb-1 text-sm">
-            <Link href="/" className="text-amber-400 hover:text-amber-300">
+            <Link href="/" className="text-amber-400 hover:text-amber-300 font-semibold">
               OTDB
             </Link>
-            <span className="text-stone-600">/</span>
-            <Link
-              href="/temples"
-              className="text-stone-400 hover:text-stone-300"
-            >
+            <span className="text-stone-700">/</span>
+            <Link href="/temples" className="text-stone-500 hover:text-stone-300 transition-colors">
               Temples
             </Link>
-            <span className="text-stone-600">/</span>
-            <span className="text-stone-300 truncate">{temple.name}</span>
+            <span className="text-stone-700">/</span>
+            <span className="text-stone-400 truncate">{temple.name}</span>
           </div>
 
-          <h1 className="text-2xl font-bold text-white mt-2">{temple.name}</h1>
+          <h1 className="text-2xl font-bold text-white mt-3">{temple.name}</h1>
           {temple.alternateName && (
-            <p className="text-stone-400 text-sm mt-0.5">
+            <p className="text-stone-500 text-sm mt-0.5">
               {temple.alternateName}
             </p>
           )}
 
           <div className="flex flex-wrap items-center gap-3 mt-3">
             <span
-              className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ring-1 ${
                 religionColors[temple.religion] || religionColors.Other
               }`}
             >
@@ -108,7 +105,7 @@ export default function TempleDetailPage() {
               </span>
             )}
             {temple.currentCondition && (
-              <span className="text-xs text-stone-500 border border-stone-600 px-2 py-0.5 rounded">
+              <span className="text-xs text-stone-500 border border-stone-700 px-2 py-0.5 rounded-lg">
                 {temple.currentCondition}
               </span>
             )}
@@ -124,8 +121,8 @@ export default function TempleDetailPage() {
 
       {/* Hero Image */}
       {temple.imageUrl && !imageError && (
-        <div className="max-w-5xl mx-auto px-4 mt-6">
-          <div className="rounded-lg overflow-hidden bg-stone-200 max-h-80">
+        <div className="max-w-5xl mx-auto px-5 mt-6">
+          <div className="rounded-xl overflow-hidden bg-stone-900 max-h-80">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={temple.imageUrl}
@@ -139,8 +136,8 @@ export default function TempleDetailPage() {
       )}
 
       {/* Tabs */}
-      <div className="max-w-5xl mx-auto px-4 mt-6">
-        <div className="border-b border-stone-200">
+      <div className="max-w-5xl mx-auto px-5 mt-6">
+        <div className="border-b border-stone-800">
           <nav className="flex gap-6">
             {TABS.map((tab) => (
               <button
@@ -148,8 +145,8 @@ export default function TempleDetailPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`pb-3 text-sm font-medium transition-colors ${
                   activeTab === tab
-                    ? "border-b-2 border-amber-500 text-stone-900"
-                    : "text-stone-400 hover:text-stone-600"
+                    ? "border-b-2 border-amber-500 text-white"
+                    : "text-stone-500 hover:text-stone-300"
                 }`}
               >
                 {tab}
@@ -160,7 +157,7 @@ export default function TempleDetailPage() {
       </div>
 
       {/* Tab Content */}
-      <div className="max-w-5xl mx-auto px-4 py-6">
+      <div className="max-w-5xl mx-auto px-5 py-6">
         {activeTab === "Overview" && <OverviewTab temple={temple} />}
         {activeTab === "Floor Plan" && <FloorPlanViewer temple={temple} />}
         {activeTab === "Engineering" && <EngineeringPanel temple={temple} />}
@@ -168,11 +165,11 @@ export default function TempleDetailPage() {
       </div>
 
       {/* Footer Nav */}
-      <div className="max-w-5xl mx-auto px-4 pb-10">
-        <div className="flex items-center justify-between border-t border-stone-200 pt-4">
+      <div className="max-w-5xl mx-auto px-5 pb-10">
+        <div className="flex items-center justify-between border-t border-stone-800 pt-4">
           <Link
             href="/"
-            className="text-sm text-stone-500 hover:text-stone-700"
+            className="text-sm text-stone-500 hover:text-stone-300 transition-colors"
           >
             Back to map
           </Link>
@@ -181,7 +178,7 @@ export default function TempleDetailPage() {
               href={temple.wikipediaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-amber-600 hover:text-amber-700"
+              className="text-sm text-amber-500 hover:text-amber-400 transition-colors"
             >
               Read more on Wikipedia
             </a>
@@ -196,8 +193,8 @@ function OverviewTab({ temple }: { temple: Temple }) {
   return (
     <div className="space-y-6">
       {/* Key Facts */}
-      <div className="bg-white rounded-lg border border-stone-200 p-5">
-        <h2 className="text-sm font-semibold text-stone-900 uppercase tracking-wider mb-3">
+      <div className="bg-stone-900 rounded-xl border border-stone-800 p-5">
+        <h2 className="text-sm font-semibold text-stone-300 uppercase tracking-wider mb-3">
           Key Facts
         </h2>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
@@ -215,52 +212,36 @@ function OverviewTab({ temple }: { temple: Temple }) {
         </dl>
       </div>
 
-      {/* Description */}
-      {temple.description && (
-        <div className="bg-white rounded-lg border border-stone-200 p-5">
-          <h2 className="text-sm font-semibold text-stone-900 uppercase tracking-wider mb-2">
-            About
-          </h2>
-          <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">
-            {temple.description}
-          </p>
-        </div>
-      )}
+      <TextBlock title="About" text={temple.description} />
+      <TextBlock title="History" text={temple.history} />
+      <TextBlock title="Architecture" text={temple.architectureNotes} />
+      <TextBlock title="Significance" text={temple.significance} />
+    </div>
+  );
+}
 
-      {/* History */}
-      {temple.history && (
-        <div className="bg-white rounded-lg border border-stone-200 p-5">
-          <h2 className="text-sm font-semibold text-stone-900 uppercase tracking-wider mb-2">
-            History
-          </h2>
-          <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">
-            {temple.history}
-          </p>
-        </div>
-      )}
+function TextBlock({ title, text }: { title: string; text?: string | null }) {
+  const [expanded, setExpanded] = useState(false);
+  if (!text) return null;
 
-      {/* Architecture Notes */}
-      {temple.architectureNotes && (
-        <div className="bg-white rounded-lg border border-stone-200 p-5">
-          <h2 className="text-sm font-semibold text-stone-900 uppercase tracking-wider mb-2">
-            Architecture
-          </h2>
-          <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">
-            {temple.architectureNotes}
-          </p>
-        </div>
-      )}
+  const isLong = text.length > 500;
+  const display = isLong && !expanded ? text.slice(0, 500) + "..." : text;
 
-      {/* Significance */}
-      {temple.significance && (
-        <div className="bg-white rounded-lg border border-stone-200 p-5">
-          <h2 className="text-sm font-semibold text-stone-900 uppercase tracking-wider mb-2">
-            Significance
-          </h2>
-          <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">
-            {temple.significance}
-          </p>
-        </div>
+  return (
+    <div className="bg-stone-900 rounded-xl border border-stone-800 p-5">
+      <h2 className="text-sm font-semibold text-stone-300 uppercase tracking-wider mb-2">
+        {title}
+      </h2>
+      <p className="text-sm text-stone-400 leading-relaxed whitespace-pre-line">
+        {display}
+      </p>
+      {isLong && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-xs text-amber-500 hover:text-amber-400 font-medium mt-2"
+        >
+          {expanded ? "Show less" : "Read more"}
+        </button>
       )}
     </div>
   );
@@ -276,10 +257,10 @@ function InfoRow({
   if (!value) return null;
   return (
     <div className="py-1.5">
-      <dt className="text-xs text-stone-400 uppercase tracking-wider">
+      <dt className="text-xs text-stone-500 uppercase tracking-wider">
         {label}
       </dt>
-      <dd className="text-sm text-stone-800 mt-0.5">{value}</dd>
+      <dd className="text-sm text-stone-200 mt-0.5">{value}</dd>
     </div>
   );
 }

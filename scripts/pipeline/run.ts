@@ -155,6 +155,7 @@ async function main() {
 
   // Run transforms
   console.log("\nTransforms:");
+  await runTransform("extract-dynasty");
   await runTransform("extract-engineering");
   await runTransform("generate-graph-tags");
 

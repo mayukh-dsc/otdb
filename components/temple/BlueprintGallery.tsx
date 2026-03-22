@@ -15,14 +15,13 @@ export default function BlueprintGallery({ temple }: Props) {
   if (!hasContent) {
     return (
       <div className="text-center py-16">
-        <div className="text-4xl mb-3 opacity-30">&#9998;</div>
-        <h3 className="text-lg font-medium text-stone-700">
+        <div className="text-4xl mb-3 opacity-20">&#9998;</div>
+        <h3 className="text-lg font-medium text-stone-300">
           Blueprints not yet available
         </h3>
-        <p className="text-sm text-stone-400 mt-1 max-w-md mx-auto">
+        <p className="text-sm text-stone-500 mt-1 max-w-md mx-auto">
           Cross-sections and elevation drawings are being gathered from the ASI
-          Temple Survey Project and Wikimedia Commons. These are available for
-          major heritage-listed temples.
+          Temple Survey Project and Wikimedia Commons.
         </p>
       </div>
     );
@@ -32,7 +31,7 @@ export default function BlueprintGallery({ temple }: Props) {
     <div className="space-y-8">
       {elevations.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-stone-900 uppercase tracking-wider mb-3">
+          <h2 className="text-sm font-semibold text-stone-300 uppercase tracking-wider mb-3">
             Elevation Drawings
           </h2>
           <div className="grid gap-4">
@@ -45,7 +44,7 @@ export default function BlueprintGallery({ temple }: Props) {
 
       {crossSections.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-stone-900 uppercase tracking-wider mb-3">
+          <h2 className="text-sm font-semibold text-stone-300 uppercase tracking-wider mb-3">
             Cross-Sections
           </h2>
           <div className="grid gap-4">
@@ -77,23 +76,23 @@ function ImageCard({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-stone-200 overflow-hidden">
-      <div className="p-3 flex items-center justify-between bg-stone-50 border-b border-stone-200">
-        <span className="text-sm font-medium text-stone-700">
+    <div className="bg-stone-900 rounded-xl border border-stone-800 overflow-hidden">
+      <div className="px-5 py-3 flex items-center justify-between border-b border-stone-800">
+        <span className="text-sm font-medium text-stone-300 capitalize">
           {img.caption || `${type} ${index + 1}`}
         </span>
         {img.attribution && (
-          <span className="text-xs text-stone-400">
+          <span className="text-xs text-stone-500">
             Source: {sourceNames[img.attribution.source] || img.attribution.source}
           </span>
         )}
       </div>
-      <div className="p-4 flex items-center justify-center bg-stone-50 min-h-[250px]">
+      <div className="p-5 flex items-center justify-center min-h-[250px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={img.url}
           alt={`${templeName} ${type}`}
-          className="max-w-full max-h-[500px] object-contain"
+          className="max-w-full max-h-[500px] object-contain rounded"
           referrerPolicy="no-referrer"
         />
       </div>

@@ -127,29 +127,30 @@ export default function TimeRangeSlider({
   const endPct = yearToPercent(localValue.end);
 
   return (
-    <div className="w-full px-4 py-3">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-sm font-medium text-amber-200">
+    <div className="w-full py-2.5">
+      <div className="flex items-center justify-between mb-1 px-0.5">
+        <span className="text-sm font-semibold text-accent-light tabular-nums">
           {formatYear(localValue.start)}
         </span>
-        <span className="text-xs text-amber-300/70 uppercase tracking-wider">
+        <span className="text-[10px] text-text-muted uppercase tracking-[0.15em] font-medium">
           Time Period
         </span>
-        <span className="text-sm font-medium text-amber-200">
+        <span className="text-sm font-semibold text-accent-light tabular-nums">
           {formatYear(localValue.end)}
         </span>
       </div>
 
       <div className="relative h-10 flex items-center" ref={trackRef}>
         {/* Background track */}
-        <div className="absolute inset-x-0 h-1.5 rounded-full bg-stone-700" />
+        <div className="absolute inset-x-0 h-1 rounded-full bg-border" />
 
         {/* Active range */}
         <div
-          className="absolute h-1.5 rounded-full bg-amber-500"
+          className="absolute h-1 rounded-full"
           style={{
             left: `${startPct}%`,
             width: `${endPct - startPct}%`,
+            background: "linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%)",
           }}
         />
 
@@ -160,8 +161,8 @@ export default function TimeRangeSlider({
             className="absolute top-7 -translate-x-1/2"
             style={{ left: `${yearToPercent(yr)}%` }}
           >
-            <div className="w-px h-2 bg-stone-600 mx-auto" />
-            <span className="text-[10px] text-stone-500 block text-center mt-0.5 whitespace-nowrap">
+            <div className="w-px h-1.5 bg-border mx-auto" />
+            <span className="text-[9px] text-text-muted block text-center mt-0.5 whitespace-nowrap tabular-nums">
               {formatYear(yr)}
             </span>
           </div>
@@ -169,7 +170,7 @@ export default function TimeRangeSlider({
 
         {/* Start handle */}
         <div
-          className="absolute w-5 h-5 rounded-full bg-amber-500 border-2 border-white shadow-lg cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10"
+          className="absolute w-4.5 h-4.5 rounded-full bg-accent border-2 border-white shadow-lg cursor-grab active:cursor-grabbing hover:scale-125 active:scale-110 transition-transform z-10"
           style={{ left: `${startPct}%`, transform: "translateX(-50%)" }}
           onMouseDown={handleMouseDown("start")}
           onTouchStart={handleTouchStart("start")}
@@ -183,7 +184,7 @@ export default function TimeRangeSlider({
 
         {/* End handle */}
         <div
-          className="absolute w-5 h-5 rounded-full bg-amber-500 border-2 border-white shadow-lg cursor-grab active:cursor-grabbing hover:scale-110 transition-transform z-10"
+          className="absolute w-4.5 h-4.5 rounded-full bg-accent border-2 border-white shadow-lg cursor-grab active:cursor-grabbing hover:scale-125 active:scale-110 transition-transform z-10"
           style={{ left: `${endPct}%`, transform: "translateX(-50%)" }}
           onMouseDown={handleMouseDown("end")}
           onTouchStart={handleTouchStart("end")}

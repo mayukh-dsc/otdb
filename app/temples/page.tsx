@@ -41,38 +41,38 @@ export default function TemplesListPage() {
   const term = tag ? handbook.find((t) => t.graphTag === tag) : null;
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <header className="bg-stone-900 border-b border-stone-700">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-3 mb-1">
+    <div className="min-h-screen bg-stone-950">
+      <header className="border-b border-stone-800">
+        <div className="max-w-6xl mx-auto px-5 py-6">
+          <div className="flex items-center gap-3 mb-1 text-sm">
             <Link
               href="/"
-              className="text-amber-400 hover:text-amber-300 text-sm"
+              className="text-amber-400 hover:text-amber-300 font-semibold"
             >
               OTDB
             </Link>
-            <span className="text-stone-600">/</span>
-            <span className="text-stone-300 text-sm">Temples</span>
+            <span className="text-stone-700">/</span>
+            <span className="text-stone-400">Temples</span>
           </div>
           {term ? (
             <>
-              <h1 className="text-2xl font-bold text-white mt-2">
+              <h1 className="text-2xl font-bold text-white mt-3">
                 {term.name}
               </h1>
-              <p className="text-stone-400 mt-1 text-sm">
+              <p className="text-stone-400 mt-1.5 text-sm max-w-2xl">
                 {term.shortDescription}
               </p>
-              <p className="text-amber-400 mt-2 text-sm font-medium">
+              <p className="text-amber-400 mt-2 text-sm font-semibold">
                 {temples.length} temple{temples.length !== 1 ? "s" : ""} with
                 this feature
               </p>
             </>
           ) : (
             <>
-              <h1 className="text-2xl font-bold text-white mt-2">
+              <h1 className="text-2xl font-bold text-white mt-3">
                 All Temples
               </h1>
-              <p className="text-stone-400 mt-1 text-sm">
+              <p className="text-stone-400 mt-1.5 text-sm">
                 {temples.length} temples in the database
               </p>
             </>
@@ -80,19 +80,19 @@ export default function TemplesListPage() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        {tag && term && (
+      <div className="max-w-6xl mx-auto px-5 py-6">
+        {tag && (
           <div className="mb-6 flex items-center gap-3">
             <Link
               href="/temples"
-              className="text-sm text-stone-500 hover:text-stone-700"
+              className="text-sm text-stone-500 hover:text-stone-300 transition-colors"
             >
               Clear filter
             </Link>
-            <span className="text-stone-300">|</span>
+            <span className="text-stone-700">|</span>
             <Link
               href="/handbook"
-              className="text-sm text-amber-600 hover:text-amber-700"
+              className="text-sm text-amber-500 hover:text-amber-400 transition-colors"
             >
               Learn more in the Handbook
             </Link>
@@ -104,17 +104,16 @@ export default function TemplesListPage() {
             <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : temples.length === 0 ? (
-          <div className="text-center py-20 text-stone-400">
+          <div className="text-center py-20 text-stone-500">
             <p className="text-lg">No temples found.</p>
             {tag && (
-              <p className="text-sm mt-1">
-                No temples have been tagged with this feature yet. Data
-                enrichment is ongoing.
+              <p className="text-sm mt-1 text-stone-600">
+                No temples have been tagged with this feature yet.
               </p>
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {temples.map((temple) => (
               <TempleCard key={temple.id} temple={temple} />
             ))}
@@ -126,36 +125,52 @@ export default function TemplesListPage() {
 }
 
 function TempleCard({ temple }: { temple: Temple }) {
-  const dateStr = temple.yearBuilt
-    ? formatYear(temple.yearBuilt)
-    : null;
+  const [imgError, setImgError] = useState(false);
+  const dateStr = temple.yearBuilt ? formatYear(temple.yearBuilt) : null;
 
   const religionColors: Record<string, string> = {
-    Hindu: "bg-orange-100 text-orange-800",
-    Buddhist: "bg-yellow-100 text-yellow-800",
-    Jain: "bg-green-100 text-green-800",
-    Other: "bg-blue-100 text-blue-800",
+    Hindu: "bg-orange-500/20 text-orange-400",
+    Buddhist: "bg-yellow-500/20 text-yellow-400",
+    Jain: "bg-green-500/20 text-green-400",
+    Other: "bg-blue-500/20 text-blue-400",
   };
 
   return (
     <Link
       href={`/temple/${temple.id}`}
-      className="block bg-white rounded-lg border border-stone-200 overflow-hidden hover:shadow-md transition-shadow"
+      className="block bg-stone-900 rounded-xl border border-stone-800 overflow-hidden hover:border-stone-600 transition-all hover:shadow-lg hover:shadow-stone-950"
     >
-      {temple.imageUrl && (
-        <div className="h-40 bg-stone-100 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+      <div className="h-40 bg-stone-800 overflow-hidden">
+        {temple.imageUrl && !imgError ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={temple.imageUrl}
             alt={temple.name}
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
+            onError={() => setImgError(true)}
           />
-        </div>
-      )}
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <svg
+              className="w-10 h-10 text-stone-700"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          </div>
+        )}
+      </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-stone-900 text-sm leading-tight">
+          <h3 className="font-semibold text-white text-sm leading-tight">
             {temple.name}
           </h3>
           <span
@@ -166,9 +181,9 @@ function TempleCard({ temple }: { temple: Temple }) {
             {temple.religion}
           </span>
         </div>
-        <div className="flex items-center gap-2 mt-1 text-xs text-stone-500">
+        <div className="flex items-center gap-2 mt-1.5 text-xs text-stone-500">
           {dateStr && <span>{dateStr}</span>}
-          {dateStr && temple.country && <span>·</span>}
+          {dateStr && temple.country && <span>&middot;</span>}
           {temple.country && <span>{temple.country}</span>}
         </div>
         {temple.graphTags && temple.graphTags.length > 0 && (

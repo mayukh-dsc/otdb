@@ -1,13 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0c0a09;
+  --foreground: #fafaf9;
+  --surface: #1c1917;
+  --surface-raised: #292524;
+  --border: #44403c;
+  --border-subtle: #292524;
+  --text-primary: #fafaf9;
+  --text-secondary: #a8a29e;
+  --text-muted: #78716c;
+  --accent: #d97706;
+  --accent-light: #fbbf24;
+  --accent-muted: rgba(217, 119, 6, 0.15);
+  --accent-secondary: #8b5cf6;
+  --accent-secondary-muted: rgba(139, 92, 246, 0.15);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-muted: var(--accent-muted);
+  --color-accent-secondary: var(--accent-secondary);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -27,12 +47,17 @@ body {
 
 /* Override leaflet popup styling */
 .leaflet-popup-content-wrapper {
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
 }
 
 .leaflet-popup-content {
-  margin: 8px 12px;
+  margin: 10px 14px !important;
+}
+
+.leaflet-popup-tip {
+  box-shadow: none !important;
 }
 
 /* Custom marker and cluster resets */
@@ -40,4 +65,16 @@ body {
 .custom-cluster {
   background: transparent !important;
   border: none !important;
+}
+
+/* Smooth image placeholder */
+.img-placeholder {
+  background: linear-gradient(135deg, #292524 0%, #1c1917 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-placeholder svg {
+  opacity: 0.2;
 }
