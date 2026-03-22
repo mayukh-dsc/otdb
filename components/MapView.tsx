@@ -181,10 +181,10 @@ export default function MapView({
             click: () => onSelectTemple(temple),
           }}
         >
-          <Popup>
-            <div className="text-sm min-w-[220px]">
+          <Popup closeButton={false} className="temple-popup">
+            <div className="text-sm min-w-[220px] p-3 text-slate-100 selection:bg-cyan-300 selection:text-slate-950">
               <div className="flex items-start justify-between gap-3">
-                <strong className="text-slate-900 text-[1.03rem] leading-tight">
+                <strong className="text-slate-100 text-[1.03rem] leading-tight [text-shadow:0_1px_1px_rgba(0,0,0,0.4)]">
                   {temple.name}
                 </strong>
                 <span
@@ -202,7 +202,7 @@ export default function MapView({
                 </span>
               </div>
               {temple.yearBuilt !== 0 && (
-                <div className="text-slate-600 text-xs mt-1">
+                <div className="text-slate-300 text-xs mt-1">
                   {formatYear(temple.yearBuilt)}
                   {temple.yearBuiltApproximate && " (approx.)"}
                 </div>
@@ -210,14 +210,14 @@ export default function MapView({
               {(temple.dynasty || temple.architecturalStyle) && (
                 <div className="mt-1 space-y-0.5">
                   {temple.dynasty && (
-                    <div className="text-slate-700 text-xs">
-                      <span className="font-semibold text-slate-800">Dynasty:</span>{" "}
+                    <div className="text-slate-200 text-xs">
+                      <span className="font-semibold text-slate-100">Dynasty:</span>{" "}
                       {temple.dynasty}
                     </div>
                   )}
                   {temple.architecturalStyle && (
-                    <div className="text-slate-700 text-xs">
-                      <span className="font-semibold text-slate-800">Style:</span>{" "}
+                    <div className="text-slate-200 text-xs">
+                      <span className="font-semibold text-slate-100">Style:</span>{" "}
                       {temple.architecturalStyle}
                     </div>
                   )}
@@ -225,7 +225,7 @@ export default function MapView({
               )}
               <a
                 href={`/temple/${temple.id}`}
-                className="zoom-hover block w-[calc(100%-8px)] mt-2 mx-1 px-3 py-1.5 text-sm text-center font-semibold text-white bg-gradient-to-r from-violet-500 to-cyan-500 rounded-lg hover:from-violet-400 hover:to-cyan-400 transition-colors"
+                className="zoom-hover block w-[calc(100%-8px)] mt-2 mx-1 px-3 py-1.5 text-sm text-center font-bold text-white bg-gradient-to-r from-violet-500 to-cyan-500 rounded-lg hover:from-violet-400 hover:to-cyan-400 transition-colors shadow-md shadow-cyan-900/30"
               >
                 View details &rarr;
               </a>
