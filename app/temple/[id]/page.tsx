@@ -9,6 +9,7 @@ import { FeatureBadgeGroup } from "@/components/FeatureBadge";
 import EngineeringPanel from "@/components/temple/EngineeringPanel";
 import FloorPlanViewer from "@/components/temple/FloorPlanViewer";
 import BlueprintGallery from "@/components/temple/BlueprintGallery";
+import { getTempleImageCandidatesFromTemple } from "@/lib/templeImage";
 
 const TABS = ["Overview", "Floor Plan", "Engineering", "Blueprint"] as const;
 type Tab = (typeof TABS)[number];
@@ -19,8 +20,6 @@ export default function TempleDetailPage() {
   const [temple, setTemple] = useState<Temple | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("Overview");
-  const [heroSrc, setHeroSrc] = useState(`/images/temples/${id}.jpg`);
-  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     fetch(`/api/temples/${id}`)
@@ -121,26 +120,7 @@ export default function TempleDetailPage() {
       </header>
 
       {/* Hero Image */}
-      {!imageError && (
-        <div className="max-w-5xl mx-auto px-5 mt-6">
-          <div className="glass-card rounded-2xl overflow-hidden max-h-80">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={heroSrc}
-              alt={temple.name}
-              className="w-full h-80 object-cover transition-transform duration-700 hover:scale-105"
-              referrerPolicy="no-referrer"
-              onError={() => {
-                if (temple.imageUrl && heroSrc !== temple.imageUrl) {
-                  setHeroSrc(temple.imageUrl);
-                } else {
-                  setImageError(true);
-                }
-              }}
-            />
-          </div>
-        </div>
-      )}
+      <TempleHeroImage key={temple.id} temple={temple} />
 
       {/* Tabs */}
       <div className="max-w-5xl mx-auto px-5 mt-6">
@@ -191,6 +171,37 @@ export default function TempleDetailPage() {
             </a>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function TempleHeroImage({ temple }: { temple: Temple }) {
+  const heroCandidates = getTempleImageCandidatesFromTemple(temple);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [imageError, setImageError] = useState(false);
+
+  if (imageError || heroCandidates.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="max-w-5xl mx-auto px-5 mt-6">
+      <div className="glass-card rounded-2xl overflow-hidden max-h-80">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={heroCandidates[Math.min(heroIndex, Math.max(heroCandidates.length - 1, 0))]}
+          alt={temple.name}
+          className="w-full h-80 object-cover transition-transform duration-700 hover:scale-105"
+          referrerPolicy="no-referrer"
+          onError={() => {
+            if (heroIndex < heroCandidates.length - 1) {
+              setHeroIndex((i) => i + 1);
+            } else {
+              setImageError(true);
+            }
+          }}
+        />
       </div>
     </div>
   );

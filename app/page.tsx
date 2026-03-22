@@ -12,6 +12,7 @@ import {
 } from "@/lib/similarityEdges";
 import TimeRangeSlider from "@/components/TimeRangeSlider";
 import TempleDetailPanel from "@/components/TempleDetailPanel";
+import { getTempleImageCandidatesFromTemple } from "@/lib/templeImage";
 
 const MapView = lazy(() => import("@/components/MapView"));
 
@@ -26,6 +27,7 @@ export default function Home() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [similarityMode, setSimilarityMode] = useState<SimilarityMode>("off");
   const [visibleConnectionGroups, setVisibleConnectionGroups] = useState<string[]>([]);
+  const [groupFilterInitialized, setGroupFilterInitialized] = useState(false);
 
   useEffect(() => {
     fetch("/api/temples")
@@ -66,20 +68,46 @@ export default function Home() {
       .sort((a, b) => b.count - a.count);
   }, [similarityEdges]);
 
-  useEffect(() => {
-    setVisibleConnectionGroups(connectionGroups.map((g) => g.group));
-  }, [similarityMode, connectionGroups]);
+  const allConnectionGroups = useMemo(
+    () => connectionGroups.map((g) => g.group),
+    [connectionGroups]
+  );
+
+  const resolvedVisibleConnectionGroups = useMemo(() => {
+    if (similarityMode === "off") return [];
+
+    const validSelected = visibleConnectionGroups.filter((group) =>
+      allConnectionGroups.includes(group)
+    );
+
+    if (!groupFilterInitialized) {
+      return allConnectionGroups;
+    }
+
+    return validSelected;
+  }, [
+    similarityMode,
+    visibleConnectionGroups,
+    allConnectionGroups,
+    groupFilterInitialized,
+  ]);
 
   const connectionFilteredTemples = useMemo(() => {
     if (similarityMode === "off") return filteredTemples;
-    if (visibleConnectionGroups.length === 0) return [];
+    if (resolvedVisibleConnectionGroups.length === 0) return [];
 
-    const visible = new Set(visibleConnectionGroups);
+    const visible = new Set(resolvedVisibleConnectionGroups);
     return filteredTemples.filter((temple) => {
       const group = getSimilarityGroupKey(temple, similarityMode);
       return !!group && visible.has(group);
     });
-  }, [filteredTemples, similarityMode, visibleConnectionGroups]);
+  }, [filteredTemples, similarityMode, resolvedVisibleConnectionGroups]);
+
+  const handleSimilarityModeChange = (mode: SimilarityMode) => {
+    setSimilarityMode(mode);
+    setGroupFilterInitialized(false);
+    setVisibleConnectionGroups([]);
+  };
 
   const connectedTemples = useMemo(() => {
     if (!selectedTemple) return [];
@@ -180,7 +208,7 @@ export default function Home() {
               {SIMILARITY_MODES.map((mode) => (
                 <button
                   key={mode.value}
-                  onClick={() => setSimilarityMode(mode.value)}
+                  onClick={() => handleSimilarityModeChange(mode.value)}
                   className={`zoom-click px-2.5 py-1.5 text-xs font-medium transition-all ${
                     similarityMode === mode.value
                       ? "bg-accent text-white shadow-md shadow-violet-500/30"
@@ -218,7 +246,7 @@ export default function Home() {
                 selectedTempleId={selectedTemple?.id ?? null}
                 onSelectTemple={handleSelectTemple}
                 similarityMode={similarityMode}
-                visibleConnectionGroups={visibleConnectionGroups}
+                visibleConnectionGroups={resolvedVisibleConnectionGroups}
               />
             </Suspense>
           )}
@@ -247,18 +275,19 @@ export default function Home() {
         )}
 
         {selectedTemple && connectedTemples.length > 0 && (
-          <div className="absolute left-3 right-3 sm:left-5 sm:right-5 bottom-14 sm:bottom-4 z-[25]">
-            <div className="glass-surface rounded-2xl border border-white/15 px-3 py-2">
+          <div className="absolute left-2.5 right-2.5 sm:left-5 sm:right-5 bottom-16 sm:bottom-4 z-[25]">
+            <div className="rounded-2xl border border-cyan-100/20 bg-slate-950/80 backdrop-blur-md shadow-2xl shadow-black/60 px-3 py-2.5 sm:px-3.5 sm:py-3 selection:bg-cyan-300 selection:text-slate-950">
               <div className="flex items-center justify-between mb-2 gap-3">
-                <p className="text-xs font-semibold tracking-wide text-slate-100 uppercase truncate">
+                <p className="text-[12px] sm:text-xs font-bold tracking-wide text-slate-100 uppercase truncate select-text [text-shadow:0_1px_1px_rgba(0,0,0,0.45)]">
                   Connected Temples of:{" "}
-                  <span className="text-cyan-300">{selectedTemple.name}</span>
+                  <span className="text-cyan-200">{selectedTemple.name}</span>
                 </p>
-                <span className="text-[11px] text-slate-300">
+                <span className="text-[11px] text-slate-200/90 rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5">
                   {connectedTemples.length} related
                 </span>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-1">
+              <div className="rounded-xl border border-white/15 bg-slate-900/70 px-2 py-2">
+                <div className="flex gap-2 overflow-x-auto pb-1 sm:pb-0.5">
                 {connectedTemples.map((temple) => (
                   <ConnectedTempleCard
                     key={temple.id}
@@ -266,6 +295,7 @@ export default function Home() {
                     onSelect={handleSelectTemple}
                   />
                 ))}
+                </div>
               </div>
             </div>
           </div>
@@ -278,7 +308,7 @@ export default function Home() {
         {SIMILARITY_MODES.map((mode) => (
           <button
             key={mode.value}
-            onClick={() => setSimilarityMode(mode.value)}
+            onClick={() => handleSimilarityModeChange(mode.value)}
             className={`zoom-click px-2 py-1 text-xs rounded-lg font-medium whitespace-nowrap transition-all ${
               similarityMode === mode.value
                 ? "bg-accent text-white shadow-md shadow-violet-500/30"
@@ -298,31 +328,33 @@ export default function Home() {
             </span>
             <button
               onClick={() =>
-                setVisibleConnectionGroups((prev) =>
-                  prev.length === connectionGroups.length
+                setVisibleConnectionGroups(() => {
+                  setGroupFilterInitialized(true);
+                  return resolvedVisibleConnectionGroups.length === allConnectionGroups.length
                     ? []
-                    : connectionGroups.map((g) => g.group)
-                )
+                    : allConnectionGroups;
+                })
               }
               className="zoom-click text-[11px] text-cyan-300 hover:text-cyan-200"
             >
-              {visibleConnectionGroups.length === connectionGroups.length
+              {resolvedVisibleConnectionGroups.length === allConnectionGroups.length
                 ? "Hide all groups"
                 : "Show all groups"}
             </button>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1">
             {connectionGroups.map((group) => {
-              const active = visibleConnectionGroups.includes(group.group);
+              const active = resolvedVisibleConnectionGroups.includes(group.group);
               return (
                 <button
                   key={group.group}
                   onClick={() =>
-                    setVisibleConnectionGroups((prev) =>
-                      prev.includes(group.group)
+                    setVisibleConnectionGroups((prev) => {
+                      setGroupFilterInitialized(true);
+                      return prev.includes(group.group)
                         ? prev.filter((g) => g !== group.group)
-                        : [...prev, group.group]
-                    )
+                        : [...prev, group.group];
+                    })
                   }
                   className={`zoom-click shrink-0 flex items-center gap-2 rounded-lg border px-2.5 py-1 text-xs transition-all ${
                     active
@@ -342,7 +374,7 @@ export default function Home() {
               );
             })}
           </div>
-          {visibleConnectionGroups.length === 0 && (
+          {groupFilterInitialized && resolvedVisibleConnectionGroups.length === 0 && (
             <p className="text-[11px] text-slate-400 mt-1">
               No group selected. Map markers and connection lines are hidden.
             </p>
@@ -377,17 +409,19 @@ function ConnectedTempleCard({
   temple: Temple;
   onSelect: (temple: Temple) => void;
 }) {
-  const [src, setSrc] = useState(`/images/temples/${temple.id}.jpg`);
+  const candidates = getTempleImageCandidatesFromTemple(temple);
+  const [srcIndex, setSrcIndex] = useState(0);
   const [failed, setFailed] = useState(false);
+  const src = candidates[Math.min(srcIndex, Math.max(candidates.length - 1, 0))];
 
   return (
     <button
       onClick={() => onSelect(temple)}
-      className="zoom-hover zoom-click shrink-0 min-w-[230px] text-left rounded-xl border border-white/15 bg-slate-900/55 px-2 py-2 hover:bg-slate-800/65"
+      className="zoom-hover zoom-click shrink-0 min-w-[230px] sm:min-w-[240px] text-left rounded-xl border border-white/20 bg-slate-800/80 px-2 py-2 hover:bg-slate-700/90 selection:bg-cyan-300 selection:text-slate-950"
     >
       <div className="flex items-center gap-2.5">
         <div className="h-11 w-14 rounded-md overflow-hidden bg-slate-800/70 flex-shrink-0 border border-white/10">
-          {!failed ? (
+          {!failed && !!src ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={src}
@@ -396,8 +430,8 @@ function ConnectedTempleCard({
               loading="lazy"
               referrerPolicy="no-referrer"
               onError={() => {
-                if (temple.imageUrl && src !== temple.imageUrl) {
-                  setSrc(temple.imageUrl);
+                if (srcIndex < candidates.length - 1) {
+                  setSrcIndex((i) => i + 1);
                 } else {
                   setFailed(true);
                 }

@@ -84,10 +84,15 @@ npx tsx scripts/pipeline/run.ts --temple q916943
 
 ## Images
 
-- Temple images are **downloaded locally** to `public/images/temples/<id>.jpg` by the download script.
-- Components use the local path `/images/temples/<id>.jpg` as primary `src`, with the remote Wikimedia URL as fallback via `onError`.
+- Temple images are resolved through `lib/templeImage.ts` helper to keep storage provider swappable.
+- Candidate order is: Blob/CDN (`NEXT_PUBLIC_TEMPLE_IMAGE_BASE_URL`) -> local `/images/temples/<id>.jpg` -> remote Wikimedia fallback.
+- Temple images can be uploaded to Vercel Blob with:
+  - `npm run upload-images:blob`
+  - then set `NEXT_PUBLIC_TEMPLE_IMAGE_BASE_URL` to the printed base URL.
+- Local download remains available:
+  - `npm run download-images` to populate `public/images/temples/`.
 - The `public/images/temples/` directory is **gitignored** — images are reproducible via `npm run download-images`.
-- On Vercel, images are downloaded during the build step (configured in `vercel.json`).
+- On Vercel, builds no longer fetch Wikimedia images. `vercel.json` runs `next build` only.
 - Floor plans and blueprints (from `visualization.floorPlanUrls`, etc.) still use remote URLs since they are rare and not bulk-downloaded.
 
 ## Identifiers and types

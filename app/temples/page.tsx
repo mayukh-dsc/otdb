@@ -6,6 +6,7 @@ import type { Temple, HandbookTerm } from "@/lib/types";
 import { formatYear } from "@/lib/utils";
 import { FeatureBadgeGroup } from "@/components/FeatureBadge";
 import handbookData from "@/data/handbook.json";
+import { getTempleImageCandidatesFromTemple } from "@/lib/templeImage";
 
 const handbook = handbookData as HandbookTerm[];
 
@@ -18,15 +19,10 @@ function getTagFromUrl(): string | null {
 export default function TemplesListPage() {
   const [temples, setTemples] = useState<Temple[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tag, setTag] = useState<string | null>(null);
+  const [tag] = useState<string | null>(() => getTagFromUrl());
 
   useEffect(() => {
-    const currentTag = getTagFromUrl();
-    setTag(currentTag);
-
-    const url = currentTag
-      ? `/api/temples?tag=${encodeURIComponent(currentTag)}`
-      : "/api/temples";
+    const url = tag ? `/api/temples?tag=${encodeURIComponent(tag)}` : "/api/temples";
 
     fetch(url)
       .then((r) => r.json())
@@ -35,7 +31,7 @@ export default function TemplesListPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [tag]);
 
   const term = tag ? handbook.find((t) => t.graphTag === tag) : null;
 
@@ -124,7 +120,8 @@ export default function TemplesListPage() {
 }
 
 function TempleCard({ temple }: { temple: Temple }) {
-  const [imgSrc, setImgSrc] = useState(`/images/temples/${temple.id}.jpg`);
+  const candidates = getTempleImageCandidatesFromTemple(temple);
+  const [imgIndex, setImgIndex] = useState(0);
   const [imgFailed, setImgFailed] = useState(false);
   const dateStr = temple.yearBuilt ? formatYear(temple.yearBuilt) : null;
 
@@ -141,17 +138,17 @@ function TempleCard({ temple }: { temple: Temple }) {
       className="glass-card zoom-hover block rounded-2xl overflow-hidden hover:border-violet-300/30 transition-all"
     >
       <div className="h-40 bg-slate-900 overflow-hidden">
-        {!imgFailed ? (
+        {!imgFailed && candidates.length > 0 ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={imgSrc}
+            src={candidates[Math.min(imgIndex, candidates.length - 1)]}
             alt={temple.name}
             className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
             loading="lazy"
             referrerPolicy="no-referrer"
             onError={() => {
-              if (temple.imageUrl && imgSrc !== temple.imageUrl) {
-                setImgSrc(temple.imageUrl);
+              if (imgIndex < candidates.length - 1) {
+                setImgIndex((i) => i + 1);
               } else {
                 setImgFailed(true);
               }

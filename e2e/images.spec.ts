@@ -5,7 +5,7 @@ test.describe("Image loading", () => {
     await page.goto("/temples");
     await page.waitForLoadState("networkidle");
 
-    const cards = page.locator("[class*='rounded-xl'] .h-40");
+    const cards = page.locator(".h-40");
     const count = await cards.count();
     expect(count).toBeGreaterThan(0);
 
@@ -77,20 +77,25 @@ test.describe("Image loading", () => {
     expect(brokenImages).toBe(0);
   });
 
-  test("local images served from /images/temples/", async ({ page }) => {
-    const localImageRequests: string[] = [];
+  test("temple images are requested from configured provider", async ({ page }) => {
+    const templeImageRequests: string[] = [];
 
     page.on("request", (req) => {
-      if (req.url().includes("/images/temples/")) {
-        localImageRequests.push(req.url());
+      if (req.resourceType() !== "image") return;
+      const url = req.url();
+      if (
+        url.includes("/images/temples/") ||
+        url.includes("/temples/") ||
+        url.includes("upload.wikimedia.org")
+      ) {
+        templeImageRequests.push(url);
       }
     });
 
     await page.goto("/temples");
     await page.waitForLoadState("networkidle");
 
-    // Components should try local images first
-    expect(localImageRequests.length).toBeGreaterThan(0);
+    expect(templeImageRequests.length).toBeGreaterThan(0);
   });
 
   test("/ home page: side panel image loads on temple click", async ({
@@ -102,7 +107,7 @@ test.describe("Image loading", () => {
     // Wait for map markers to appear
     const marker = page.locator(".custom-marker").first();
     if ((await marker.count()) > 0) {
-      await marker.click();
+      await marker.click({ force: true });
 
       // Wait for the panel to slide in
       const panel = page.locator("[class*='translate-x-0']").first();

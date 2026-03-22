@@ -8,9 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "download-images": "tsx scripts/pipeline/download-images.ts",
+    "upload-images:blob": "tsx scripts/pipeline/upload-images-to-blob.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@vercel/blob": "^0.27.0",
     "leaflet": "^1.9.4",
     "next": "16.1.6",
     "react": "19.2.3",

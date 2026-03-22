@@ -1,5 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run download-images && next build",
+  "buildCommand": "next build",
   "installCommand": "npm install --include=dev"
 }

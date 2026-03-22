@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Temple } from "@/lib/types";
 import { formatYear } from "@/lib/utils";
 import { FeatureBadgeGroup } from "@/components/FeatureBadge";
+import { getTempleImageCandidates } from "@/lib/templeImage";
 
 interface TempleDetailPanelProps {
   temple: Temple | null;
@@ -106,7 +107,12 @@ export default function TempleDetailPanel({
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
         {/* Image */}
-        <TempleImage templeId={temple.id} imageUrl={temple.imageUrl} alt={temple.name} />
+        <TempleImage
+          key={`${temple.id}:${temple.imageUrl ?? ""}`}
+          templeId={temple.id}
+          imageUrl={temple.imageUrl}
+          alt={temple.name}
+        />
 
         {/* Graph Tags */}
         {temple.graphTags && temple.graphTags.length > 0 && (
@@ -238,11 +244,34 @@ function TempleImage({
   imageUrl?: string;
   alt: string;
 }) {
-  const [src, setSrc] = useState(`/images/temples/${templeId}.jpg`);
+  const [srcIndex, setSrcIndex] = useState(0);
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const candidates = getTempleImageCandidates(templeId, imageUrl);
+
+  const currentSrc = candidates[Math.min(srcIndex, Math.max(candidates.length - 1, 0))];
 
   if (failed) {
+    return (
+      <div className="w-full h-44 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center">
+        <svg
+          className="w-10 h-10 text-stone-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1}
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+      </div>
+    );
+  }
+
+  if (!currentSrc) {
     return (
       <div className="w-full h-44 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center">
         <svg
@@ -271,14 +300,14 @@ function TempleImage({
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={src}
+        src={currentSrc}
         alt={alt}
         className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
         referrerPolicy="no-referrer"
         onLoad={() => setLoaded(true)}
         onError={() => {
-          if (imageUrl && src !== imageUrl) {
-            setSrc(imageUrl.replace(/^http:/, "https:"));
+          if (srcIndex < candidates.length - 1) {
+            setSrcIndex((i) => i + 1);
           } else {
             setFailed(true);
           }

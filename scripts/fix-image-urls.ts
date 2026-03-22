@@ -51,7 +51,8 @@ function main() {
 
   // Print a few examples
   for (const t of temples.slice(0, 3)) {
-    console.log(`  ${(t as any).name}: ${t.imageUrl?.slice(0, 120)}`);
+    const name = typeof t.name === "string" ? t.name : "(unknown temple)";
+    console.log(`  ${name}: ${t.imageUrl?.slice(0, 120)}`);
   }
 }
 
