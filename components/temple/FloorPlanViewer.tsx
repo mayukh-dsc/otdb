@@ -1,6 +1,7 @@
 "use client";
 
 import type { Temple } from "@/lib/types";
+import { filterImageRefs } from "@/lib/imageUtils";
 
 interface Props {
   temple: Temple;
@@ -8,7 +9,8 @@ interface Props {
 
 export default function FloorPlanViewer({ temple }: Props) {
   const viz = temple.visualization;
-  const hasFloorPlans = viz?.floorPlanUrls && viz.floorPlanUrls.length > 0;
+  const cleanedPlans = filterImageRefs(viz?.floorPlanUrls);
+  const hasFloorPlans = cleanedPlans.length > 0;
   const hasLegacyFloorPlan = temple.floorPlanUrl;
 
   if (!hasFloorPlans && !hasLegacyFloorPlan) {
@@ -27,7 +29,7 @@ export default function FloorPlanViewer({ temple }: Props) {
   }
 
   const images = hasFloorPlans
-    ? viz!.floorPlanUrls!
+    ? cleanedPlans
     : [
         {
           url: temple.floorPlanUrl!,

@@ -1,6 +1,7 @@
 "use client";
 
 import type { Temple } from "@/lib/types";
+import { filterImageRefs } from "@/lib/imageUtils";
 
 interface Props {
   temple: Temple;
@@ -8,8 +9,8 @@ interface Props {
 
 export default function BlueprintGallery({ temple }: Props) {
   const viz = temple.visualization;
-  const crossSections = viz?.crossSectionUrls || [];
-  const elevations = viz?.elevationUrls || [];
+  const crossSections = filterImageRefs(viz?.crossSectionUrls);
+  const elevations = filterImageRefs(viz?.elevationUrls);
   const hasContent = crossSections.length > 0 || elevations.length > 0;
 
   if (!hasContent) {

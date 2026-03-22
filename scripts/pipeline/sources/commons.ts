@@ -37,14 +37,24 @@ interface CommonsQueryResponse {
   error?: { code?: string; info?: string };
 }
 
-function toImageRef(info: CommonsImageInfo, commonsUrl: string): ImageRef {
+const NON_IMAGE_EXTENSIONS = /\.(djvu|pdf|tiff?|svg|ogg|ogv|webm|mp[34])(\?|$)/i;
+
+function stripHtmlTags(text: string): string {
+  return text.replace(/<[^>]+>/g, "").replace(/\n/g, " ").replace(/\s{2,}/g, " ").trim();
+}
+
+function toImageRef(info: CommonsImageInfo, commonsUrl: string): ImageRef | null {
   const url = info.url ?? "";
-  const caption =
+  if (!url || NON_IMAGE_EXTENSIONS.test(url)) return null;
+
+  const rawCaption =
     info.extmetadata?.ObjectName?.value ??
     info.extmetadata?.ImageDescription?.value?.slice(0, 200);
+  const caption = rawCaption ? stripHtmlTags(rawCaption).slice(0, 300) : undefined;
+
   return {
     url,
-    caption: caption ? caption.slice(0, 300) : undefined,
+    caption: caption || undefined,
     attribution: {
       source: "commons",
       url: info.descriptionurl ?? commonsUrl,
@@ -87,7 +97,8 @@ async function searchCommons(
     seen.add(info.url);
     const fileTitle = page.title ?? "File:unknown";
     const commonsUrl = `https://commons.wikimedia.org/wiki/${encodeURIComponent(fileTitle)}`;
-    refs.push(toImageRef(info, commonsUrl));
+    const ref = toImageRef(info, commonsUrl);
+    if (ref) refs.push(ref);
   }
   return refs;
 }
