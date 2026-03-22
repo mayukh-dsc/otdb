@@ -9,7 +9,7 @@ import { FeatureBadgeGroup } from "@/components/FeatureBadge";
 import EngineeringPanel from "@/components/temple/EngineeringPanel";
 import FloorPlanViewer from "@/components/temple/FloorPlanViewer";
 import BlueprintGallery from "@/components/temple/BlueprintGallery";
-import { getTempleImageCandidatesFromTemple } from "@/lib/templeImage";
+import { getTempleImageCandidatesFromTemple, getTempleImageSrcSet, TEMPLE_IMAGE_SIZES } from "@/lib/templeImage";
 
 const TABS = ["Overview", "Floor Plan", "Engineering", "Blueprint"] as const;
 type Tab = (typeof TABS)[number];
@@ -178,6 +178,7 @@ export default function TempleDetailPage() {
 
 function TempleHeroImage({ temple }: { temple: Temple }) {
   const heroCandidates = getTempleImageCandidatesFromTemple(temple);
+  const srcSet = getTempleImageSrcSet(temple.id);
   const [heroIndex, setHeroIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
 
@@ -191,6 +192,8 @@ function TempleHeroImage({ temple }: { temple: Temple }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={heroCandidates[Math.min(heroIndex, Math.max(heroCandidates.length - 1, 0))]}
+          srcSet={srcSet || undefined}
+          sizes={srcSet ? TEMPLE_IMAGE_SIZES : undefined}
           alt={temple.name}
           className="w-full h-80 object-cover transition-transform duration-700 hover:scale-105"
           referrerPolicy="no-referrer"

@@ -6,10 +6,9 @@ export function formatYear(year: number): string {
   return `${year} AD`;
 }
 
-export function filterTemplesByTimeRange(
-  temples: Temple[],
-  range: TimeRange
-): Temple[] {
+export function filterTemplesByTimeRange<
+  T extends { yearBuilt: number; yearBuiltEnd?: number },
+>(temples: T[], range: TimeRange): T[] {
   return temples.filter((t) => {
     const start = t.yearBuilt;
     const end = t.yearBuiltEnd ?? t.yearBuilt;

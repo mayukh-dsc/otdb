@@ -169,6 +169,38 @@ export interface Temple {
   graphTags?: string[];
 }
 
+// ── Summary (lightweight projection for map/list) ────────────────────
+
+export interface TempleSummary {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  yearBuilt: number;
+  yearBuiltApproximate: boolean;
+  religion: "Hindu" | "Buddhist" | "Jain" | "Other";
+  architecturalStyle?: string;
+  dynasty?: string;
+  country: string;
+  imageUrl?: string;
+  graphTags?: string[];
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
+}
+
+export interface BBox {
+  south: number;
+  west: number;
+  north: number;
+  east: number;
+}
+
 // ── Time Range (for map filter) ──────────────────────────────────────
 
 export interface TimeRange {

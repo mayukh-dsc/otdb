@@ -71,7 +71,29 @@ export async function run(): Promise<void> {
     return temple;
   });
 
-  const outPath = join(__dirname, "..", "..", "..", "data", "temples.json");
+  const dataDir = join(__dirname, "..", "..", "..", "data");
+
+  const outPath = join(dataDir, "temples.json");
   writeFileSync(outPath, JSON.stringify(temples, null, 2) + "\n");
   console.log(`    Exported ${temples.length} temples to data/temples.json`);
+
+  const SUMMARY_FIELDS = [
+    "id", "name", "latitude", "longitude", "yearBuilt",
+    "yearBuiltApproximate", "religion", "architecturalStyle",
+    "dynasty", "country", "imageUrl", "graphTags",
+  ];
+
+  const summaries = temples.map((t) => {
+    const summary: Record<string, unknown> = {};
+    for (const field of SUMMARY_FIELDS) {
+      if (t[field] !== undefined) {
+        summary[field] = t[field];
+      }
+    }
+    return summary;
+  });
+
+  const summaryPath = join(dataDir, "temples-summary.json");
+  writeFileSync(summaryPath, JSON.stringify(summaries) + "\n");
+  console.log(`    Exported ${summaries.length} summaries to data/temples-summary.json`);
 }

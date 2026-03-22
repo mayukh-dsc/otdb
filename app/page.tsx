@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import { useState, useEffect, useMemo, useCallback, lazy, Suspense } from "react";
 import Link from "next/link";
-import { Temple, TimeRange, MIN_YEAR, MAX_YEAR } from "@/lib/types";
+import { Temple, TempleSummary, TimeRange, MIN_YEAR, MAX_YEAR } from "@/lib/types";
 import { filterTemplesByTimeRange } from "@/lib/utils";
 import {
   SIMILARITY_MODES,
@@ -12,12 +12,14 @@ import {
 } from "@/lib/similarityEdges";
 import TimeRangeSlider from "@/components/TimeRangeSlider";
 import TempleDetailPanel from "@/components/TempleDetailPanel";
-import { getTempleImageCandidatesFromTemple } from "@/lib/templeImage";
+import { getTempleImageCandidates } from "@/lib/templeImage";
+import { flags } from "@/lib/featureFlags";
 
 const MapView = lazy(() => import("@/components/MapView"));
 
 export default function Home() {
-  const [temples, setTemples] = useState<Temple[]>([]);
+  const [temples, setTemples] = useState<TempleSummary[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRange>({
     start: MIN_YEAR,
@@ -30,13 +32,25 @@ export default function Home() {
   const [groupFilterInitialized, setGroupFilterInitialized] = useState(false);
 
   useEffect(() => {
-    fetch("/api/temples")
-      .then((r) => r.json())
-      .then((data: Temple[]) => {
-        setTemples(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    if (flags.useSummaryApi) {
+      fetch("/api/temples?summary=true&limit=1000")
+        .then((r) => r.json())
+        .then((result: { data: TempleSummary[]; total: number }) => {
+          setTemples(result.data);
+          setTotalCount(result.total);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } else {
+      fetch("/api/temples")
+        .then((r) => r.json())
+        .then((data: TempleSummary[]) => {
+          setTemples(data);
+          setTotalCount(data.length);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
   }, []);
 
   const filteredTemples = useMemo(
@@ -114,10 +128,9 @@ export default function Home() {
 
     const norm = (v?: string) => (v || "").trim().toLowerCase();
 
-    const isConnected = (candidate: Temple) => {
+    const isConnected = (candidate: TempleSummary) => {
       if (candidate.id === selectedTemple.id) return false;
 
-      // Prefer current selected mode; fall back to broadly useful associations.
       if (similarityMode === "dynasty") {
         return (
           !!norm(selectedTemple.dynasty) &&
@@ -145,19 +158,20 @@ export default function Home() {
           norm(selectedTemple.dynasty) === norm(candidate.dynasty)) ||
         (norm(selectedTemple.architecturalStyle) &&
           norm(selectedTemple.architecturalStyle) ===
-            norm(candidate.architecturalStyle)) ||
-        (norm(selectedTemple.partOfComplex) &&
-          norm(selectedTemple.partOfComplex) === norm(candidate.partOfComplex))
+            norm(candidate.architecturalStyle))
       );
     };
 
     return connectionFilteredTemples.filter(isConnected).slice(0, 20);
   }, [connectionFilteredTemples, selectedTemple, similarityMode]);
 
-  const handleSelectTemple = (temple: Temple) => {
-    setSelectedTemple(temple);
+  const handleSelectTemple = useCallback((temple: TempleSummary) => {
     setPanelOpen(true);
-  };
+    fetch(`/api/temples/${temple.id}`)
+      .then((r) => r.json())
+      .then((full: Temple) => setSelectedTemple(full))
+      .catch(() => {});
+  }, []);
 
   const handleClosePanel = () => {
     setPanelOpen(false);
@@ -184,7 +198,7 @@ export default function Home() {
             </span>
             <span className="text-text-muted">
               {" "}
-              / {filteredTemples.length} visible (time) / {temples.length} total
+              / {filteredTemples.length} visible (time) / {totalCount} total
             </span>
           </span>
           <nav className="hidden sm:flex items-center gap-1 glass-card rounded-xl p-1">
@@ -322,6 +336,11 @@ export default function Home() {
 
       {similarityMode !== "off" && connectionGroups.length > 0 && (
         <div className="glass-surface border-t border-border-subtle z-20 flex-shrink-0 px-4 py-2">
+          {connectionFilteredTemples.length > 500 && (
+            <p className="text-[11px] text-amber-300/80 mb-1">
+              Connection lines hidden (zoom in or apply filters to reduce temples below 500)
+            </p>
+          )}
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] uppercase tracking-wider text-slate-300 font-semibold">
               Connection Groups (Filters map + lines)
@@ -406,10 +425,10 @@ function ConnectedTempleCard({
   temple,
   onSelect,
 }: {
-  temple: Temple;
-  onSelect: (temple: Temple) => void;
+  temple: TempleSummary;
+  onSelect: (temple: TempleSummary) => void;
 }) {
-  const candidates = getTempleImageCandidatesFromTemple(temple);
+  const candidates = getTempleImageCandidates(temple.id, temple.imageUrl);
   const [srcIndex, setSrcIndex] = useState(0);
   const [failed, setFailed] = useState(false);
   const src = candidates[Math.min(srcIndex, Math.max(candidates.length - 1, 0))];

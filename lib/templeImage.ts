@@ -1,4 +1,4 @@
-import type { Temple } from "./types";
+import type { Temple, TempleSummary } from "./types";
 
 const blobBaseUrl =
   process.env.NEXT_PUBLIC_TEMPLE_IMAGE_BASE_URL?.replace(/\/+$/, "") ?? "";
@@ -36,7 +36,21 @@ export function getTempleImageCandidates(
   return unique([blobUrl, localUrl, remoteUrl]);
 }
 
-export function getTempleImageCandidatesFromTemple(temple: Temple): string[] {
+export function getTempleImageCandidatesFromTemple(temple: Temple | TempleSummary): string[] {
   return getTempleImageCandidates(temple.id, temple.imageUrl);
 }
 
+/**
+ * Build a responsive srcSet string for blob-hosted images.
+ * Falls back to empty string when blob URL is not configured.
+ */
+export function getTempleImageSrcSet(templeId: string): string {
+  if (!blobBaseUrl) return "";
+
+  const widths = [320, 640, 960];
+  return widths
+    .map((w) => `${blobBaseUrl}/temples/${templeId}.jpg?w=${w} ${w}w`)
+    .join(", ");
+}
+
+export const TEMPLE_IMAGE_SIZES = "(max-width: 640px) 320px, (max-width: 1024px) 640px, 960px";

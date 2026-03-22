@@ -1,6 +1,8 @@
-import type { Temple } from "./types";
+import type { Temple, TempleSummary } from "./types";
 
 export type SimilarityMode = "off" | "style" | "dynasty" | "religion" | "century";
+
+export type SimilarityRecord = Temple | TempleSummary;
 
 export interface SimilarityEdge {
   from: [number, number]; // [lat, lng]
@@ -22,7 +24,7 @@ function getCentury(year: number): string {
   return `${Math.ceil(year / 100)} AD`;
 }
 
-export function getSimilarityGroupKey(temple: Temple, mode: SimilarityMode): string {
+export function getSimilarityGroupKey(temple: SimilarityRecord, mode: SimilarityMode): string {
   switch (mode) {
     case "style":
       return normalize(temple.architecturalStyle);
@@ -73,7 +75,7 @@ function haversine(a: [number, number], b: [number, number]): number {
  * For larger groups, build a nearest-neighbor chain to avoid clutter.
  */
 function buildGroupEdges(
-  temples: Temple[],
+  temples: SimilarityRecord[],
   group: string
 ): Array<{ from: [number, number]; to: [number, number] }> {
   if (temples.length < 2) return [];
@@ -116,12 +118,12 @@ function buildGroupEdges(
 }
 
 export function buildSimilarityEdges(
-  temples: Temple[],
+  temples: SimilarityRecord[],
   mode: SimilarityMode
 ): SimilarityEdge[] {
   if (mode === "off") return [];
 
-  const groups = new Map<string, Temple[]>();
+  const groups = new Map<string, SimilarityRecord[]>();
 
   for (const temple of temples) {
     const key = getSimilarityGroupKey(temple, mode);

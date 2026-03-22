@@ -8,11 +8,17 @@ export async function GET(request: NextRequest) {
   try {
     if (tag) {
       const temples = queryTemplesByTag(tag);
-      return NextResponse.json({ tag, count: temples.length, temples });
+      return NextResponse.json(
+        { tag, count: temples.length, temples },
+        { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+      );
     }
 
     const counts = queryTagCounts();
-    return NextResponse.json({ tags: counts });
+    return NextResponse.json(
+      { tags: counts },
+      { headers: { "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600" } }
+    );
   } catch {
     return NextResponse.json(
       { error: "Internal server error" },

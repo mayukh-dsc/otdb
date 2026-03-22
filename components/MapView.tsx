@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState, useCallback } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -8,9 +8,9 @@ import {
   Popup,
   Polyline,
   useMap,
+  useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
-import { Temple } from "@/lib/types";
 import { getReligionColor, formatYear } from "@/lib/utils";
 import {
   buildSimilarityEdges,
@@ -18,6 +18,7 @@ import {
   getSimilarityGroupKey,
   type SimilarityMode,
   type SimilarityEdge,
+  type SimilarityRecord,
 } from "@/lib/similarityEdges";
 
 const INITIAL_CENTER: [number, number] = [18, 82];
@@ -27,10 +28,23 @@ const MAX_BOUNDS: [[number, number], [number, number]] = [
   [40, 115],
 ];
 
+const SIMILARITY_EDGE_MAX_TEMPLES = 500;
+const SIMILARITY_MIN_ZOOM = 6;
+
 const CARTO_VOYAGER =
   "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 const CARTO_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>';
+
+const RELIGION_BADGE_CLASSES: Record<string, string> = {
+  Hindu: "bg-orange-100 text-orange-700",
+  Buddhist: "bg-yellow-100 text-yellow-700",
+  Jain: "bg-emerald-100 text-emerald-700",
+};
+
+function getReligionBadgeClass(religion: string): string {
+  return RELIGION_BADGE_CLASSES[religion] ?? "bg-blue-100 text-blue-700";
+}
 
 function createTempleIcon(religion: string, markerColor?: string): L.DivIcon {
   const color = markerColor || getReligionColor(religion);
@@ -74,10 +88,19 @@ function SimilarityLinesPane() {
   return null;
 }
 
+function ZoomTracker({ onZoomChange }: { onZoomChange: (zoom: number) => void }) {
+  const map = useMapEvents({
+    zoomend() {
+      onZoomChange(map.getZoom());
+    },
+  });
+  return null;
+}
+
 interface MapViewProps {
-  temples: Temple[];
-  selectedTempleId: string | null;
-  onSelectTemple: (temple: Temple) => void;
+  temples: SimilarityRecord[];
+  selectedTempleId?: string | null;
+  onSelectTemple: (temple: SimilarityRecord) => void;
   similarityMode: SimilarityMode;
   visibleConnectionGroups?: string[];
 }
@@ -120,21 +143,30 @@ function SimilarityLines({ edges }: { edges: SimilarityEdge[] }) {
 
 export default function MapView({
   temples,
-  selectedTempleId,
   onSelectTemple,
   similarityMode,
   visibleConnectionGroups,
 }: MapViewProps) {
   const markerRefs = useRef<Map<string, L.Marker>>(new Map());
+  const [zoom, setZoom] = useState(INITIAL_ZOOM);
+
+  const handleZoomChange = useCallback((z: number) => setZoom(z), []);
+
+  const similarityGated =
+    similarityMode !== "off" &&
+    temples.length <= SIMILARITY_EDGE_MAX_TEMPLES &&
+    zoom >= SIMILARITY_MIN_ZOOM;
 
   const edges = useMemo(() => {
+    if (!similarityGated) return [];
+
     const built = buildSimilarityEdges(temples, similarityMode);
     if (!visibleConnectionGroups || visibleConnectionGroups.length === 0) {
       return built;
     }
     const allowed = new Set(visibleConnectionGroups);
     return built.filter((edge) => allowed.has(edge.group));
-  }, [temples, similarityMode, visibleConnectionGroups]);
+  }, [temples, similarityMode, visibleConnectionGroups, similarityGated]);
 
   const markerColorsByTempleId = useMemo(() => {
     const byId = new Map<string, string>();
@@ -149,8 +181,6 @@ export default function MapView({
     return byId;
   }, [temples, similarityMode]);
 
-  // selectedTempleId reserved for future fly-to behavior
-
   return (
     <MapContainer
       center={INITIAL_CENTER}
@@ -164,6 +194,7 @@ export default function MapView({
     >
       <TileLayer attribution={CARTO_ATTR} url={CARTO_VOYAGER} />
       <InvalidateOnResize />
+      <ZoomTracker onZoomChange={handleZoomChange} />
       <SimilarityLinesPane />
       <SimilarityLines edges={edges} />
       {temples.map((temple) => (
@@ -188,15 +219,7 @@ export default function MapView({
                   {temple.name}
                 </strong>
                 <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
-                    temple.religion === "Hindu"
-                      ? "bg-orange-100 text-orange-700"
-                      : temple.religion === "Buddhist"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : temple.religion === "Jain"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-blue-100 text-blue-700"
-                  }`}
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${getReligionBadgeClass(temple.religion)}`}
                 >
                   {temple.religion}
                 </span>

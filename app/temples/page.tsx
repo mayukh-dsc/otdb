@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import type { Temple, HandbookTerm } from "@/lib/types";
+import type { TempleSummary, HandbookTerm } from "@/lib/types";
 import { formatYear } from "@/lib/utils";
 import { FeatureBadgeGroup } from "@/components/FeatureBadge";
 import handbookData from "@/data/handbook.json";
-import { getTempleImageCandidatesFromTemple } from "@/lib/templeImage";
+import { getTempleImageCandidates } from "@/lib/templeImage";
 
 const handbook = handbookData as HandbookTerm[];
 
@@ -17,17 +17,18 @@ function getTagFromUrl(): string | null {
 }
 
 export default function TemplesListPage() {
-  const [temples, setTemples] = useState<Temple[]>([]);
+  const [temples, setTemples] = useState<TempleSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [tag] = useState<string | null>(() => getTagFromUrl());
 
   useEffect(() => {
-    const url = tag ? `/api/temples?tag=${encodeURIComponent(tag)}` : "/api/temples";
+    const base = "/api/temples?summary=true&limit=1000";
+    const url = tag ? `${base}&tag=${encodeURIComponent(tag)}` : base;
 
     fetch(url)
       .then((r) => r.json())
-      .then((data: Temple[]) => {
-        setTemples(data);
+      .then((result: { data: TempleSummary[]; total: number }) => {
+        setTemples(result.data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -119,8 +120,8 @@ export default function TemplesListPage() {
   );
 }
 
-function TempleCard({ temple }: { temple: Temple }) {
-  const candidates = getTempleImageCandidatesFromTemple(temple);
+function TempleCard({ temple }: { temple: TempleSummary }) {
+  const candidates = getTempleImageCandidates(temple.id, temple.imageUrl);
   const [imgIndex, setImgIndex] = useState(0);
   const [imgFailed, setImgFailed] = useState(false);
   const dateStr = temple.yearBuilt ? formatYear(temple.yearBuilt) : null;
