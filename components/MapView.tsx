@@ -9,12 +9,13 @@ import {
   Polyline,
   useMap,
 } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { Temple } from "@/lib/types";
 import { getReligionColor, formatYear } from "@/lib/utils";
 import {
   buildSimilarityEdges,
+  getSimilarityGroupColor,
+  getSimilarityGroupKey,
   type SimilarityMode,
   type SimilarityEdge,
 } from "@/lib/similarityEdges";
@@ -31,36 +32,22 @@ const CARTO_VOYAGER =
 const CARTO_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>';
 
-function createTempleIcon(religion: string): L.DivIcon {
-  const color = getReligionColor(religion);
+function createTempleIcon(religion: string, markerColor?: string): L.DivIcon {
+  const color = markerColor || getReligionColor(religion);
   return L.divIcon({
     className: "custom-marker",
-    html: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 24 30" style="filter: drop-shadow(0 1px 3px rgba(0,0,0,0.35));">
-      <g fill="${color}" stroke="white" stroke-width="1.2" stroke-linejoin="round">
-        <circle cx="12" cy="3" r="2"/>
-        <path d="M7 14 L12 5 L17 14Z"/>
-        <rect x="5" y="14" width="14" height="10"/>
-        <rect x="3" y="24" width="18" height="4" rx="1"/>
+    html: `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="38" viewBox="0 0 30 38" style="filter: drop-shadow(0 3px 8px rgba(0,0,0,0.35));">
+      <g fill="${color}" stroke="white" stroke-width="1.4" stroke-linejoin="round">
+        <circle cx="15" cy="4" r="2.4"/>
+        <path d="M8.5 17 L15 7 L21.5 17Z"/>
+        <rect x="6.5" y="17" width="17" height="12" rx="1.5"/>
+        <rect x="4.5" y="29" width="21" height="5" rx="1.2"/>
       </g>
-      <path d="M9.5 28 V20.5 Q12 17.5 14.5 20.5 V28Z" fill="white" stroke="none"/>
+      <path d="M11.7 34 V25.2 Q15 21.2 18.3 25.2 V34Z" fill="white" stroke="none"/>
     </svg>`,
-    iconSize: [24, 30],
-    iconAnchor: [12, 30],
-    popupAnchor: [0, -30],
-  });
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createClusterIcon(cluster: any): L.DivIcon {
-  const count = cluster.getChildCount();
-  let size = "w-8 h-8 text-xs";
-  if (count > 50) size = "w-12 h-12 text-sm";
-  else if (count > 10) size = "w-10 h-10 text-sm";
-
-  return L.divIcon({
-    html: `<div class="${size} flex items-center justify-center rounded-full bg-amber-600 text-white font-bold shadow-lg border-2 border-white/80">${count}</div>`,
-    className: "custom-cluster",
-    iconSize: L.point(40, 40),
+    iconSize: [30, 38],
+    iconAnchor: [15, 38],
+    popupAnchor: [0, -36],
   });
 }
 
@@ -92,6 +79,7 @@ interface MapViewProps {
   selectedTempleId: string | null;
   onSelectTemple: (temple: Temple) => void;
   similarityMode: SimilarityMode;
+  visibleConnectionGroups?: string[];
 }
 
 function SimilarityLines({ edges }: { edges: SimilarityEdge[] }) {
@@ -100,21 +88,31 @@ function SimilarityLines({ edges }: { edges: SimilarityEdge[] }) {
   return (
     <>
       {edges.map((edge, i) => (
-        <Polyline
-          key={`${i}-${edge.group}`}
-          positions={[edge.from, edge.to]}
-          pathOptions={{
-            color: edge.color,
-            weight: 2,
-            opacity: 0.55,
-            dashArray: "6 10",
-          }}
-          pane="similarityLines"
-        >
-          <Popup>
-            <span className="text-xs font-medium capitalize">{edge.group}</span>
-          </Popup>
-        </Polyline>
+        <div key={`${i}-${edge.group}`}>
+          <Polyline
+            positions={[edge.from, edge.to]}
+            pathOptions={{
+              color: edge.color,
+              weight: 6,
+              opacity: 0.18,
+            }}
+            pane="similarityLines"
+          />
+          <Polyline
+            positions={[edge.from, edge.to]}
+            pathOptions={{
+              color: edge.color,
+              weight: 3,
+              opacity: 0.9,
+              dashArray: "4 8",
+            }}
+            pane="similarityLines"
+          >
+            <Popup>
+              <span className="text-xs font-medium capitalize">{edge.group}</span>
+            </Popup>
+          </Polyline>
+        </div>
       ))}
     </>
   );
@@ -125,13 +123,31 @@ export default function MapView({
   selectedTempleId,
   onSelectTemple,
   similarityMode,
+  visibleConnectionGroups,
 }: MapViewProps) {
   const markerRefs = useRef<Map<string, L.Marker>>(new Map());
 
-  const edges = useMemo(
-    () => buildSimilarityEdges(temples, similarityMode),
-    [temples, similarityMode]
-  );
+  const edges = useMemo(() => {
+    const built = buildSimilarityEdges(temples, similarityMode);
+    if (!visibleConnectionGroups || visibleConnectionGroups.length === 0) {
+      return built;
+    }
+    const allowed = new Set(visibleConnectionGroups);
+    return built.filter((edge) => allowed.has(edge.group));
+  }, [temples, similarityMode, visibleConnectionGroups]);
+
+  const markerColorsByTempleId = useMemo(() => {
+    const byId = new Map<string, string>();
+    if (similarityMode === "off") return byId;
+
+    for (const temple of temples) {
+      const group = getSimilarityGroupKey(temple, similarityMode);
+      if (!group) continue;
+      byId.set(temple.id, getSimilarityGroupColor(group));
+    }
+
+    return byId;
+  }, [temples, similarityMode]);
 
   // selectedTempleId reserved for future fly-to behavior
 
@@ -150,50 +166,73 @@ export default function MapView({
       <InvalidateOnResize />
       <SimilarityLinesPane />
       <SimilarityLines edges={edges} />
-      <MarkerClusterGroup
-        chunkedLoading
-        maxClusterRadius={50}
-        iconCreateFunction={createClusterIcon}
-        spiderfyOnMaxZoom
-        showCoverageOnHover={false}
-      >
-        {temples.map((temple) => (
-          <Marker
-            key={temple.id}
-            position={[temple.latitude, temple.longitude]}
-            icon={createTempleIcon(temple.religion)}
-            ref={(ref) => {
-              if (ref) markerRefs.current.set(temple.id, ref);
-            }}
-            eventHandlers={{
-              click: () => onSelectTemple(temple),
-            }}
-          >
-            <Popup>
-              <div className="text-sm min-w-[180px]">
-                <strong className="text-stone-900">{temple.name}</strong>
-                {temple.yearBuilt !== 0 && (
-                  <div className="text-stone-500 text-xs mt-0.5">
-                    {formatYear(temple.yearBuilt)}
-                    {temple.yearBuiltApproximate && " (approx.)"}
-                  </div>
-                )}
-                {temple.architecturalStyle && (
-                  <div className="text-stone-400 text-xs">
-                    {temple.architecturalStyle}
-                  </div>
-                )}
-                <a
-                  href={`/temple/${temple.id}`}
-                  className="inline-block mt-1.5 px-2.5 py-1 text-xs font-medium text-white bg-amber-600 rounded-md hover:bg-amber-700 transition-colors"
+      {temples.map((temple) => (
+        <Marker
+          key={temple.id}
+          position={[temple.latitude, temple.longitude]}
+          icon={createTempleIcon(
+            temple.religion,
+            markerColorsByTempleId.get(temple.id)
+          )}
+          ref={(ref) => {
+            if (ref) markerRefs.current.set(temple.id, ref);
+          }}
+          eventHandlers={{
+            click: () => onSelectTemple(temple),
+          }}
+        >
+          <Popup>
+            <div className="text-sm min-w-[220px]">
+              <div className="flex items-start justify-between gap-3">
+                <strong className="text-slate-900 text-[1.03rem] leading-tight">
+                  {temple.name}
+                </strong>
+                <span
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
+                    temple.religion === "Hindu"
+                      ? "bg-orange-100 text-orange-700"
+                      : temple.religion === "Buddhist"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : temple.religion === "Jain"
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-blue-100 text-blue-700"
+                  }`}
                 >
-                  View details &rarr;
-                </a>
+                  {temple.religion}
+                </span>
               </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
+              {temple.yearBuilt !== 0 && (
+                <div className="text-slate-600 text-xs mt-1">
+                  {formatYear(temple.yearBuilt)}
+                  {temple.yearBuiltApproximate && " (approx.)"}
+                </div>
+              )}
+              {(temple.dynasty || temple.architecturalStyle) && (
+                <div className="mt-1 space-y-0.5">
+                  {temple.dynasty && (
+                    <div className="text-slate-700 text-xs">
+                      <span className="font-semibold text-slate-800">Dynasty:</span>{" "}
+                      {temple.dynasty}
+                    </div>
+                  )}
+                  {temple.architecturalStyle && (
+                    <div className="text-slate-700 text-xs">
+                      <span className="font-semibold text-slate-800">Style:</span>{" "}
+                      {temple.architecturalStyle}
+                    </div>
+                  )}
+                </div>
+              )}
+              <a
+                href={`/temple/${temple.id}`}
+                className="zoom-hover block w-[calc(100%-8px)] mt-2 mx-1 px-3 py-1.5 text-sm text-center font-semibold text-white bg-gradient-to-r from-violet-500 to-cyan-500 rounded-lg hover:from-violet-400 hover:to-cyan-400 transition-colors"
+              >
+                View details &rarr;
+              </a>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
     </MapContainer>
   );
 }

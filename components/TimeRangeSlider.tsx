@@ -142,7 +142,7 @@ export default function TimeRangeSlider({
 
       <div className="relative h-10 flex items-center" ref={trackRef}>
         {/* Background track */}
-        <div className="absolute inset-x-0 h-1 rounded-full bg-border" />
+        <div className="absolute inset-x-0 h-1 rounded-full bg-slate-600/45" />
 
         {/* Active range */}
         <div
@@ -150,7 +150,8 @@ export default function TimeRangeSlider({
           style={{
             left: `${startPct}%`,
             width: `${endPct - startPct}%`,
-            background: "linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%)",
+            background:
+              "linear-gradient(90deg, rgba(124,58,237,1) 0%, rgba(34,211,238,1) 100%)",
           }}
         />
 
@@ -170,7 +171,7 @@ export default function TimeRangeSlider({
 
         {/* Start handle */}
         <div
-          className="absolute w-4.5 h-4.5 rounded-full bg-accent border-2 border-white shadow-lg cursor-grab active:cursor-grabbing hover:scale-125 active:scale-110 transition-transform z-10"
+          className="absolute w-5 h-5 rounded-full bg-accent border-2 border-white/85 shadow-lg shadow-violet-500/40 cursor-grab active:cursor-grabbing hover:scale-125 active:scale-110 transition-transform z-10"
           style={{ left: `${startPct}%`, transform: "translateX(-50%)" }}
           onMouseDown={handleMouseDown("start")}
           onTouchStart={handleTouchStart("start")}
@@ -184,7 +185,7 @@ export default function TimeRangeSlider({
 
         {/* End handle */}
         <div
-          className="absolute w-4.5 h-4.5 rounded-full bg-accent border-2 border-white shadow-lg cursor-grab active:cursor-grabbing hover:scale-125 active:scale-110 transition-transform z-10"
+          className="absolute w-5 h-5 rounded-full bg-accent border-2 border-white/85 shadow-lg shadow-cyan-500/30 cursor-grab active:cursor-grabbing hover:scale-125 active:scale-110 transition-transform z-10"
           style={{ left: `${endPct}%`, transform: "translateX(-50%)" }}
           onMouseDown={handleMouseDown("end")}
           onTouchStart={handleTouchStart("end")}

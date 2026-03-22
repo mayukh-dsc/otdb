@@ -1,6 +1,6 @@
 import type { Temple } from "./types";
 
-export type SimilarityMode = "off" | "style" | "complex" | "dynasty" | "religion" | "century";
+export type SimilarityMode = "off" | "style" | "dynasty" | "religion" | "century";
 
 export interface SimilarityEdge {
   from: [number, number]; // [lat, lng]
@@ -22,12 +22,10 @@ function getCentury(year: number): string {
   return `${Math.ceil(year / 100)} AD`;
 }
 
-function getGroupKey(temple: Temple, mode: SimilarityMode): string {
+export function getSimilarityGroupKey(temple: Temple, mode: SimilarityMode): string {
   switch (mode) {
     case "style":
       return normalize(temple.architecturalStyle);
-    case "complex":
-      return normalize(temple.partOfComplex);
     case "dynasty":
       return normalize(temple.dynasty);
     case "religion":
@@ -47,7 +45,7 @@ function hashToHue(str: string): number {
   return ((hash % 360) + 360) % 360;
 }
 
-function groupColor(group: string): string {
+export function getSimilarityGroupColor(group: string): string {
   const hue = hashToHue(group);
   return `hsl(${hue}, 70%, 55%)`;
 }
@@ -126,7 +124,7 @@ export function buildSimilarityEdges(
   const groups = new Map<string, Temple[]>();
 
   for (const temple of temples) {
-    const key = getGroupKey(temple, mode);
+    const key = getSimilarityGroupKey(temple, mode);
     if (!key) continue;
     const list = groups.get(key) || [];
     list.push(temple);
@@ -137,7 +135,7 @@ export function buildSimilarityEdges(
 
   for (const [group, members] of groups) {
     if (members.length < 2) continue;
-    const color = groupColor(group);
+    const color = getSimilarityGroupColor(group);
     const edges = buildGroupEdges(members, group);
     for (const edge of edges) {
       result.push({ ...edge, group, color });
@@ -150,7 +148,6 @@ export function buildSimilarityEdges(
 export const SIMILARITY_MODES: { value: SimilarityMode; label: string }[] = [
   { value: "off", label: "Off" },
   { value: "style", label: "Style" },
-  { value: "complex", label: "Complex" },
   { value: "dynasty", label: "Dynasty" },
   { value: "religion", label: "Religion" },
   { value: "century", label: "Century" },

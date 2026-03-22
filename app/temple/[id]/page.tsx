@@ -37,7 +37,7 @@ export default function TempleDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-950 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -45,7 +45,7 @@ export default function TempleDetailPage() {
 
   if (!temple) {
     return (
-      <div className="min-h-screen bg-stone-950 flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <h1 className="text-2xl font-bold text-white">Temple not found</h1>
         <Link href="/" className="text-amber-500 hover:text-amber-400">
           Back to map
@@ -66,25 +66,25 @@ export default function TempleDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-950">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-stone-800">
+      <header className="glass-surface border-b border-white/10">
         <div className="max-w-5xl mx-auto px-5 py-6">
           <div className="flex items-center gap-3 mb-1 text-sm">
             <Link href="/" className="text-amber-400 hover:text-amber-300 font-semibold">
               OTDB
             </Link>
-            <span className="text-stone-700">/</span>
-            <Link href="/temples" className="text-stone-500 hover:text-stone-300 transition-colors">
+            <span className="text-slate-500">/</span>
+            <Link href="/temples" className="text-slate-300 hover:text-white transition-colors">
               Temples
             </Link>
-            <span className="text-stone-700">/</span>
-            <span className="text-stone-400 truncate">{temple.name}</span>
+            <span className="text-slate-500">/</span>
+            <span className="text-slate-200 truncate">{temple.name}</span>
           </div>
 
-          <h1 className="text-2xl font-bold text-white mt-3">{temple.name}</h1>
+          <h1 className="text-3xl font-bold text-white mt-3 tracking-tight">{temple.name}</h1>
           {temple.alternateName && (
-            <p className="text-stone-500 text-sm mt-0.5">
+            <p className="text-slate-300 text-sm mt-0.5">
               {temple.alternateName}
             </p>
           )}
@@ -98,15 +98,15 @@ export default function TempleDetailPage() {
               {temple.religion}
             </span>
             {dateStr && (
-              <span className="text-sm text-stone-400">{dateStr}</span>
+              <span className="text-sm text-slate-200">{dateStr}</span>
             )}
             {temple.country && (
-              <span className="text-sm text-stone-500">
+              <span className="text-sm text-slate-300">
                 {[temple.state, temple.country].filter(Boolean).join(", ")}
               </span>
             )}
             {temple.currentCondition && (
-              <span className="text-xs text-stone-500 border border-stone-700 px-2 py-0.5 rounded-lg">
+              <span className="text-xs text-slate-200 border border-white/20 px-2 py-0.5 rounded-lg">
                 {temple.currentCondition}
               </span>
             )}
@@ -123,12 +123,12 @@ export default function TempleDetailPage() {
       {/* Hero Image */}
       {!imageError && (
         <div className="max-w-5xl mx-auto px-5 mt-6">
-          <div className="rounded-xl overflow-hidden bg-stone-900 max-h-80">
+          <div className="glass-card rounded-2xl overflow-hidden max-h-80">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={heroSrc}
               alt={temple.name}
-              className="w-full h-80 object-cover"
+              className="w-full h-80 object-cover transition-transform duration-700 hover:scale-105"
               referrerPolicy="no-referrer"
               onError={() => {
                 if (temple.imageUrl && heroSrc !== temple.imageUrl) {
@@ -144,16 +144,16 @@ export default function TempleDetailPage() {
 
       {/* Tabs */}
       <div className="max-w-5xl mx-auto px-5 mt-6">
-        <div className="border-b border-stone-800">
+        <div className="glass-surface rounded-xl px-4 border border-white/10">
           <nav className="flex gap-6">
             {TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-3 text-sm font-medium transition-colors ${
+                className={`zoom-click py-3 text-sm font-medium transition-colors ${
                   activeTab === tab
-                    ? "border-b-2 border-amber-500 text-white"
-                    : "text-stone-500 hover:text-stone-300"
+                    ? "border-b-2 border-cyan-300 text-white"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 {tab}
@@ -173,10 +173,10 @@ export default function TempleDetailPage() {
 
       {/* Footer Nav */}
       <div className="max-w-5xl mx-auto px-5 pb-10">
-        <div className="flex items-center justify-between border-t border-stone-800 pt-4">
+        <div className="flex items-center justify-between border-t border-white/10 pt-4">
           <Link
             href="/"
-            className="text-sm text-stone-500 hover:text-stone-300 transition-colors"
+            className="zoom-hover text-sm text-slate-400 hover:text-slate-100 transition-colors"
           >
             Back to map
           </Link>
@@ -185,7 +185,7 @@ export default function TempleDetailPage() {
               href={temple.wikipediaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-amber-500 hover:text-amber-400 transition-colors"
+              className="zoom-hover text-sm text-cyan-300 hover:text-cyan-200 transition-colors"
             >
               Read more on Wikipedia
             </a>
@@ -200,8 +200,8 @@ function OverviewTab({ temple }: { temple: Temple }) {
   return (
     <div className="space-y-6">
       {/* Key Facts */}
-      <div className="bg-stone-900 rounded-xl border border-stone-800 p-5">
-        <h2 className="text-sm font-semibold text-stone-300 uppercase tracking-wider mb-3">
+      <div className="glass-card zoom-hover rounded-xl border p-5">
+        <h2 className="text-sm font-semibold text-slate-200 uppercase tracking-wider mb-3">
           Key Facts
         </h2>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
@@ -235,17 +235,17 @@ function TextBlock({ title, text }: { title: string; text?: string | null }) {
   const display = isLong && !expanded ? text.slice(0, 500) + "..." : text;
 
   return (
-    <div className="bg-stone-900 rounded-xl border border-stone-800 p-5">
-      <h2 className="text-sm font-semibold text-stone-300 uppercase tracking-wider mb-2">
+    <div className="glass-card zoom-hover rounded-xl border p-5">
+      <h2 className="text-sm font-semibold text-slate-200 uppercase tracking-wider mb-2">
         {title}
       </h2>
-      <p className="text-sm text-stone-400 leading-relaxed whitespace-pre-line">
+      <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
         {display}
       </p>
       {isLong && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="text-xs text-amber-500 hover:text-amber-400 font-medium mt-2"
+          className="zoom-click text-xs text-cyan-300 hover:text-cyan-200 font-medium mt-2"
         >
           {expanded ? "Show less" : "Read more"}
         </button>
@@ -264,10 +264,10 @@ function InfoRow({
   if (!value) return null;
   return (
     <div className="py-1.5">
-      <dt className="text-xs text-stone-500 uppercase tracking-wider">
+      <dt className="text-xs text-slate-300 uppercase tracking-wider">
         {label}
       </dt>
-      <dd className="text-sm text-stone-200 mt-0.5">{value}</dd>
+      <dd className="text-sm text-white mt-0.5">{value}</dd>
     </div>
   );
 }

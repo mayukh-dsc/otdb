@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import Link from "next/link";
 import { Temple, TimeRange, MIN_YEAR, MAX_YEAR } from "@/lib/types";
 import { filterTemplesByTimeRange } from "@/lib/utils";
 import {
   SIMILARITY_MODES,
+  buildSimilarityEdges,
+  getSimilarityGroupKey,
   type SimilarityMode,
 } from "@/lib/similarityEdges";
 import TimeRangeSlider from "@/components/TimeRangeSlider";
@@ -22,6 +25,7 @@ export default function Home() {
   const [selectedTemple, setSelectedTemple] = useState<Temple | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [similarityMode, setSimilarityMode] = useState<SimilarityMode>("off");
+  const [visibleConnectionGroups, setVisibleConnectionGroups] = useState<string[]>([]);
 
   useEffect(() => {
     fetch("/api/temples")
@@ -38,6 +42,90 @@ export default function Home() {
     [temples, timeRange]
   );
 
+  const similarityEdges = useMemo(
+    () => buildSimilarityEdges(filteredTemples, similarityMode),
+    [filteredTemples, similarityMode]
+  );
+
+  const connectionGroups = useMemo(() => {
+    const counts = new Map<string, { color: string; count: number }>();
+    for (const edge of similarityEdges) {
+      const existing = counts.get(edge.group);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        counts.set(edge.group, { color: edge.color, count: 1 });
+      }
+    }
+    return Array.from(counts.entries())
+      .map(([group, value]) => ({
+        group,
+        color: value.color,
+        count: value.count,
+      }))
+      .sort((a, b) => b.count - a.count);
+  }, [similarityEdges]);
+
+  useEffect(() => {
+    setVisibleConnectionGroups(connectionGroups.map((g) => g.group));
+  }, [similarityMode, connectionGroups]);
+
+  const connectionFilteredTemples = useMemo(() => {
+    if (similarityMode === "off") return filteredTemples;
+    if (visibleConnectionGroups.length === 0) return [];
+
+    const visible = new Set(visibleConnectionGroups);
+    return filteredTemples.filter((temple) => {
+      const group = getSimilarityGroupKey(temple, similarityMode);
+      return !!group && visible.has(group);
+    });
+  }, [filteredTemples, similarityMode, visibleConnectionGroups]);
+
+  const connectedTemples = useMemo(() => {
+    if (!selectedTemple) return [];
+
+    const norm = (v?: string) => (v || "").trim().toLowerCase();
+
+    const isConnected = (candidate: Temple) => {
+      if (candidate.id === selectedTemple.id) return false;
+
+      // Prefer current selected mode; fall back to broadly useful associations.
+      if (similarityMode === "dynasty") {
+        return (
+          !!norm(selectedTemple.dynasty) &&
+          norm(selectedTemple.dynasty) === norm(candidate.dynasty)
+        );
+      }
+      if (similarityMode === "style") {
+        return (
+          !!norm(selectedTemple.architecturalStyle) &&
+          norm(selectedTemple.architecturalStyle) ===
+            norm(candidate.architecturalStyle)
+        );
+      }
+      if (similarityMode === "religion") {
+        return norm(selectedTemple.religion) === norm(candidate.religion);
+      }
+      if (similarityMode === "century") {
+        const toCentury = (year: number) =>
+          year < 0 ? Math.ceil(Math.abs(year) / 100) : Math.ceil(year / 100);
+        return toCentury(selectedTemple.yearBuilt) === toCentury(candidate.yearBuilt);
+      }
+
+      return (
+        (norm(selectedTemple.dynasty) &&
+          norm(selectedTemple.dynasty) === norm(candidate.dynasty)) ||
+        (norm(selectedTemple.architecturalStyle) &&
+          norm(selectedTemple.architecturalStyle) ===
+            norm(candidate.architecturalStyle)) ||
+        (norm(selectedTemple.partOfComplex) &&
+          norm(selectedTemple.partOfComplex) === norm(candidate.partOfComplex))
+      );
+    };
+
+    return connectionFilteredTemples.filter(isConnected).slice(0, 20);
+  }, [connectionFilteredTemples, selectedTemple, similarityMode]);
+
   const handleSelectTemple = (temple: Temple) => {
     setSelectedTemple(temple);
     setPanelOpen(true);
@@ -51,50 +139,52 @@ export default function Home() {
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-background">
       {/* Header */}
-      <header className="flex items-center justify-between px-5 py-2.5 bg-surface border-b border-border-subtle z-20 flex-shrink-0">
+      <header className="glass-surface flex items-center justify-between px-5 py-3 border-b border-border-subtle z-20 flex-shrink-0">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-bold tracking-wide">
-            <span className="text-accent-light">O</span>
-            <span className="text-foreground">TDB</span>
+            <span className="text-accent-light">OT</span>
+            <span className="text-foreground">DB</span>
           </h1>
-          <span className="text-xs text-text-muted hidden sm:inline font-medium tracking-wider uppercase">
+          <span className="text-xs text-slate-300 hidden sm:inline font-medium tracking-wider uppercase">
             Old Temples Database
           </span>
         </div>
         <div className="flex items-center gap-5 text-sm">
-          <span className="text-text-secondary hidden md:inline">
+          <span className="text-slate-200 hidden md:inline">
             <span className="text-accent-light font-semibold">
-              {filteredTemples.length}
+              {connectionFilteredTemples.length}
             </span>
-            <span className="text-text-muted"> / {temples.length} temples</span>
+            <span className="text-text-muted">
+              {" "}
+              / {filteredTemples.length} visible (time) / {temples.length} total
+            </span>
           </span>
-          <nav className="hidden sm:flex items-center gap-1">
+          <nav className="hidden sm:flex items-center gap-1 glass-card rounded-xl p-1">
             <NavLink href="/handbook">Handbook</NavLink>
             <NavLink href="/temples">Browse</NavLink>
           </nav>
-          <Legend />
         </div>
       </header>
 
       {/* Controls Bar */}
-      <div className="bg-surface border-b border-border-subtle z-20 flex-shrink-0">
+      <div className="glass-surface border-b border-border-subtle z-20 flex-shrink-0">
         <div className="flex items-center gap-4 px-5">
           <div className="flex-1">
             <TimeRangeSlider value={timeRange} onChange={setTimeRange} />
           </div>
           <div className="hidden sm:flex items-center gap-2 py-2">
-            <span className="text-xs text-text-muted uppercase tracking-wider font-medium whitespace-nowrap">
+            <span className="text-xs text-slate-200 uppercase tracking-wider font-medium whitespace-nowrap">
               Connections
             </span>
-            <div className="flex rounded-lg border border-border-subtle overflow-hidden">
+            <div className="glass-card flex rounded-xl border border-border-subtle overflow-hidden">
               {SIMILARITY_MODES.map((mode) => (
                 <button
                   key={mode.value}
                   onClick={() => setSimilarityMode(mode.value)}
-                  className={`px-2.5 py-1 text-xs font-medium transition-colors ${
+                  className={`zoom-click px-2.5 py-1.5 text-xs font-medium transition-all ${
                     similarityMode === mode.value
-                      ? "bg-accent text-white"
-                      : "text-text-muted hover:text-text-secondary hover:bg-surface-raised"
+                      ? "bg-accent text-white shadow-md shadow-violet-500/30"
+                      : "text-slate-200 hover:text-white hover:bg-surface-raised"
                   }`}
                 >
                   {mode.label}
@@ -109,25 +199,26 @@ export default function Home() {
       <div className="flex-1 flex relative overflow-hidden">
         <div className="flex-1 relative">
           {loading ? (
-            <div className="h-full flex items-center justify-center bg-stone-100">
+            <div className="h-full flex items-center justify-center bg-slate-950/70">
               <div className="text-center">
                 <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                <p className="text-text-muted text-sm">Loading temples...</p>
+                <p className="text-text-secondary text-sm">Loading temples...</p>
               </div>
             </div>
           ) : (
             <Suspense
               fallback={
-                <div className="h-full flex items-center justify-center bg-stone-100">
-                  <p className="text-text-muted text-sm">Loading map...</p>
+                <div className="h-full flex items-center justify-center bg-slate-950/70">
+                  <p className="text-text-secondary text-sm">Loading map...</p>
                 </div>
               }
             >
               <MapView
-                temples={filteredTemples}
+                temples={connectionFilteredTemples}
                 selectedTempleId={selectedTemple?.id ?? null}
                 onSelectTemple={handleSelectTemple}
                 similarityMode={similarityMode}
+                visibleConnectionGroups={visibleConnectionGroups}
               />
             </Suspense>
           )}
@@ -135,7 +226,7 @@ export default function Home() {
 
         {/* Side Panel */}
         <div
-          className={`absolute top-0 right-0 h-full w-full sm:w-[420px] bg-white shadow-2xl z-30 transition-transform duration-300 ease-in-out ${
+          className={`absolute top-0 right-0 h-full w-full sm:w-[420px] glass-surface shadow-2xl z-30 transition-transform duration-300 ease-in-out ${
             panelOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -154,25 +245,110 @@ export default function Home() {
             tabIndex={-1}
           />
         )}
+
+        {selectedTemple && connectedTemples.length > 0 && (
+          <div className="absolute left-3 right-3 sm:left-5 sm:right-5 bottom-14 sm:bottom-4 z-[25]">
+            <div className="glass-surface rounded-2xl border border-white/15 px-3 py-2">
+              <div className="flex items-center justify-between mb-2 gap-3">
+                <p className="text-xs font-semibold tracking-wide text-slate-100 uppercase truncate">
+                  Connected Temples of:{" "}
+                  <span className="text-cyan-300">{selectedTemple.name}</span>
+                </p>
+                <span className="text-[11px] text-slate-300">
+                  {connectedTemples.length} related
+                </span>
+              </div>
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {connectedTemples.map((temple) => (
+                  <ConnectedTempleCard
+                    key={temple.id}
+                    temple={temple}
+                    onSelect={handleSelectTemple}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Mobile connections (below map on small screens) */}
-      <div className="sm:hidden bg-surface border-t border-border-subtle px-4 py-2 flex items-center gap-2 overflow-x-auto flex-shrink-0">
-        <span className="text-xs text-text-muted whitespace-nowrap">Lines:</span>
+      <div className="sm:hidden glass-surface border-t border-border-subtle px-4 py-2 flex items-center gap-2 overflow-x-auto flex-shrink-0">
+        <span className="text-xs text-slate-200 whitespace-nowrap">Lines:</span>
         {SIMILARITY_MODES.map((mode) => (
           <button
             key={mode.value}
             onClick={() => setSimilarityMode(mode.value)}
-            className={`px-2 py-1 text-xs rounded font-medium whitespace-nowrap transition-colors ${
+            className={`zoom-click px-2 py-1 text-xs rounded-lg font-medium whitespace-nowrap transition-all ${
               similarityMode === mode.value
-                ? "bg-accent text-white"
-                : "text-text-muted"
+                ? "bg-accent text-white shadow-md shadow-violet-500/30"
+                : "text-slate-200 glass-card"
             }`}
           >
             {mode.label}
           </button>
         ))}
       </div>
+
+      {similarityMode !== "off" && connectionGroups.length > 0 && (
+        <div className="glass-surface border-t border-border-subtle z-20 flex-shrink-0 px-4 py-2">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] uppercase tracking-wider text-slate-300 font-semibold">
+              Connection Groups (Filters map + lines)
+            </span>
+            <button
+              onClick={() =>
+                setVisibleConnectionGroups((prev) =>
+                  prev.length === connectionGroups.length
+                    ? []
+                    : connectionGroups.map((g) => g.group)
+                )
+              }
+              className="zoom-click text-[11px] text-cyan-300 hover:text-cyan-200"
+            >
+              {visibleConnectionGroups.length === connectionGroups.length
+                ? "Hide all groups"
+                : "Show all groups"}
+            </button>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {connectionGroups.map((group) => {
+              const active = visibleConnectionGroups.includes(group.group);
+              return (
+                <button
+                  key={group.group}
+                  onClick={() =>
+                    setVisibleConnectionGroups((prev) =>
+                      prev.includes(group.group)
+                        ? prev.filter((g) => g !== group.group)
+                        : [...prev, group.group]
+                    )
+                  }
+                  className={`zoom-click shrink-0 flex items-center gap-2 rounded-lg border px-2.5 py-1 text-xs transition-all ${
+                    active
+                      ? "bg-slate-800/70 border-white/25 text-white"
+                      : "bg-slate-900/40 border-white/10 text-slate-400 opacity-60"
+                  }`}
+                  title={group.group}
+                >
+                  <span
+                    className="inline-block h-2.5 w-2.5 rounded-full"
+                    style={{ backgroundColor: group.color }}
+                  />
+                  <span className="capitalize">
+                    {group.group} ({group.count})
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {visibleConnectionGroups.length === 0 && (
+            <p className="text-[11px] text-slate-400 mt-1">
+              No group selected. Map markers and connection lines are hidden.
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -185,32 +361,61 @@ function NavLink({
   children: React.ReactNode;
 }) {
   return (
-    <a
+    <Link
       href={href}
-      className="px-3 py-1.5 rounded-md text-xs font-medium text-text-secondary hover:text-accent-light hover:bg-accent-muted transition-colors"
+      className="zoom-hover px-3 py-1.5 rounded-lg text-xs font-medium text-slate-100 hover:text-accent-light hover:bg-accent-muted transition-colors"
     >
       {children}
-    </a>
+    </Link>
   );
 }
 
-function Legend() {
-  const items = [
-    { color: "#e85d26", label: "Hindu" },
-    { color: "#d4a72c", label: "Buddhist" },
-    { color: "#2d8659", label: "Jain" },
-  ];
+function ConnectedTempleCard({
+  temple,
+  onSelect,
+}: {
+  temple: Temple;
+  onSelect: (temple: Temple) => void;
+}) {
+  const [src, setSrc] = useState(`/images/temples/${temple.id}.jpg`);
+  const [failed, setFailed] = useState(false);
+
   return (
-    <div className="hidden lg:flex items-center gap-3">
-      {items.map(({ color, label }) => (
-        <div key={label} className="flex items-center gap-1.5">
-          <div
-            className="w-2.5 h-2.5 rounded-full ring-1 ring-white/10"
-            style={{ backgroundColor: color }}
-          />
-          <span className="text-xs text-text-muted">{label}</span>
+    <button
+      onClick={() => onSelect(temple)}
+      className="zoom-hover zoom-click shrink-0 min-w-[230px] text-left rounded-xl border border-white/15 bg-slate-900/55 px-2 py-2 hover:bg-slate-800/65"
+    >
+      <div className="flex items-center gap-2.5">
+        <div className="h-11 w-14 rounded-md overflow-hidden bg-slate-800/70 flex-shrink-0 border border-white/10">
+          {!failed ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={src}
+              alt={temple.name}
+              className="h-full w-full object-cover"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              onError={() => {
+                if (temple.imageUrl && src !== temple.imageUrl) {
+                  setSrc(temple.imageUrl);
+                } else {
+                  setFailed(true);
+                }
+              }}
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center text-slate-500 text-[10px]">
+              No img
+            </div>
+          )}
         </div>
-      ))}
-    </div>
+        <div className="min-w-0">
+          <div className="text-sm font-semibold text-white truncate">{temple.name}</div>
+          <div className="text-[11px] text-slate-300 mt-0.5 truncate">
+            {temple.dynasty || temple.architecturalStyle || temple.religion}
+          </div>
+        </div>
+      </div>
+    </button>
   );
 }

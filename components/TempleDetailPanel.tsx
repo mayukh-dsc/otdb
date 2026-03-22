@@ -19,11 +19,11 @@ function InfoRow({
 }) {
   if (!value) return null;
   return (
-    <div className="flex items-start justify-between py-2 border-b border-stone-100 last:border-b-0 gap-4">
-      <dt className="text-xs uppercase tracking-wider text-stone-400 flex-shrink-0 pt-0.5">
+    <div className="flex items-start justify-between py-2 border-b border-white/10 last:border-b-0 gap-4">
+      <dt className="text-xs uppercase tracking-wider text-slate-400 flex-shrink-0 pt-0.5">
         {label}
       </dt>
-      <dd className="text-sm text-stone-800 text-right">{value}</dd>
+      <dd className="text-sm text-slate-100 text-right">{value}</dd>
     </div>
   );
 }
@@ -55,36 +55,36 @@ export default function TempleDetailPanel({
     : null;
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-slate-950/95 text-slate-100">
       {/* Header */}
-      <div className="flex items-start justify-between p-5 border-b border-stone-200 bg-stone-50">
+      <div className="glass-surface flex items-start justify-between p-5 border-b border-white/10">
         <div className="flex-1 min-w-0 pr-3">
-          <h2 className="text-lg font-bold text-stone-900 leading-tight">
+          <h2 className="text-lg font-bold text-slate-100 leading-tight">
             {temple.name}
           </h2>
           {temple.alternateName && (
-            <p className="text-xs text-stone-400 mt-0.5 truncate">
+            <p className="text-xs text-slate-400 mt-0.5 truncate">
               {temple.alternateName}
             </p>
           )}
           <div className="flex items-center gap-2 mt-2.5">
             <ReligionBadge religion={temple.religion} />
             {temple.currentCondition && (
-              <span className="text-xs text-stone-500 bg-stone-100 px-2 py-0.5 rounded-full">
+              <span className="text-xs text-slate-300 bg-slate-700/45 px-2 py-0.5 rounded-full">
                 {temple.currentCondition}
               </span>
             )}
           </div>
           <a
             href={`/temple/${temple.id}`}
-            className="inline-flex items-center gap-1.5 mt-3 px-3.5 py-1.5 text-xs font-semibold text-white bg-amber-600 rounded-lg hover:bg-amber-700 transition-colors shadow-sm"
+          className="zoom-hover inline-flex items-center gap-1.5 mt-3 px-3.5 py-1.5 text-xs font-semibold text-white bg-accent rounded-lg hover:bg-violet-500 transition-colors shadow-sm"
           >
             Full Visualization &rarr;
           </a>
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-lg hover:bg-stone-200 text-stone-400 hover:text-stone-600 transition-colors flex-shrink-0"
+          className="zoom-click p-1.5 rounded-lg hover:bg-slate-700/50 text-slate-400 hover:text-slate-200 transition-colors flex-shrink-0"
           aria-label="Close panel"
         >
           <svg
@@ -154,10 +154,10 @@ export default function TempleDetailPanel({
           {/* Floor Plan */}
           {temple.floorPlanUrl && (
             <div className="pt-4">
-              <h3 className="text-xs uppercase tracking-wider text-stone-400 font-semibold mb-2">
+              <h3 className="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">
                 Floor Plan
               </h3>
-              <div className="w-full bg-stone-50 rounded-lg overflow-hidden border border-stone-200">
+              <div className="w-full bg-slate-900/60 rounded-lg overflow-hidden border border-white/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={temple.floorPlanUrl}
@@ -176,7 +176,7 @@ export default function TempleDetailPanel({
                 href={temple.wikipediaUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-amber-700 hover:text-amber-900 font-medium"
+                className="inline-flex items-center gap-1.5 text-sm text-cyan-300 hover:text-cyan-200 font-medium"
               >
                 <svg
                   className="w-4 h-4"
@@ -211,16 +211,16 @@ function TextSection({ title, text }: { title: string; text?: string | null }) {
 
   return (
     <div className="pt-4">
-      <h3 className="text-xs uppercase tracking-wider text-stone-400 font-semibold mb-1.5">
+      <h3 className="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1.5">
         {title}
       </h3>
-      <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">
+      <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
         {display}
       </p>
       {isLong && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="text-xs text-amber-600 hover:text-amber-700 font-medium mt-1"
+          className="zoom-click text-xs text-cyan-300 hover:text-cyan-200 font-medium mt-1"
         >
           {expanded ? "Show less" : "Read more"}
         </button>
@@ -263,7 +263,7 @@ function TempleImage({
   }
 
   return (
-    <div className="w-full h-52 bg-stone-100 overflow-hidden relative">
+    <div className="w-full h-52 bg-slate-900 overflow-hidden relative">
       {!loaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-stone-100">
           <div className="w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />

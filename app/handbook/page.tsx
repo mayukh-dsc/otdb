@@ -91,9 +91,9 @@ export default function HandbookPage() {
   }, [filtered]);
 
   return (
-    <div className="min-h-screen bg-stone-950">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-stone-800">
+      <header className="glass-surface border-b border-white/10">
         <div className="max-w-6xl mx-auto px-5 py-6">
           <div className="flex items-center gap-3 mb-1 text-sm">
             <Link
@@ -102,13 +102,13 @@ export default function HandbookPage() {
             >
               OTDB
             </Link>
-            <span className="text-stone-700">/</span>
-            <span className="text-stone-400">Handbook</span>
+            <span className="text-slate-500">/</span>
+            <span className="text-slate-300">Handbook</span>
           </div>
-          <h1 className="text-2xl font-bold text-white mt-3">
+          <h1 className="text-3xl font-bold text-white mt-3 tracking-tight">
             Understanding Temple Architecture
           </h1>
-          <p className="text-stone-400 mt-1.5 text-sm leading-relaxed max-w-2xl">
+          <p className="text-slate-200 mt-1.5 text-sm leading-relaxed max-w-2xl">
             A glossary of {terms.length} terms covering structural anatomy,
             construction techniques, materials, and engineering systems. Click
             any term to find temples that share that feature.
@@ -124,7 +124,7 @@ export default function HandbookPage() {
             placeholder="Search terms..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 px-4 py-2.5 rounded-lg border border-stone-700 bg-stone-900 text-white text-sm placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500"
+            className="glass-card flex-1 px-4 py-2.5 rounded-xl border border-white/15 bg-slate-900/45 text-white text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-300/50"
           />
           <div className="flex flex-wrap gap-1.5">
             <FilterPill
@@ -154,7 +154,7 @@ export default function HandbookPage() {
               <h2 className={`text-lg font-bold ${CATEGORY_META[cat].accent}`}>
                 {CATEGORY_META[cat].label}
               </h2>
-              <p className="text-sm text-stone-500">
+              <p className="text-sm text-slate-300">
                 {CATEGORY_META[cat].description}
               </p>
             </div>
@@ -167,14 +167,14 @@ export default function HandbookPage() {
         ))}
 
         {filtered.length === 0 && (
-          <div className="text-center py-20 text-stone-500">
+          <div className="text-center py-20 text-slate-300">
             <p className="text-lg">No terms match your search.</p>
             <button
               onClick={() => {
                 setSearch("");
                 setActiveCategory(null);
               }}
-              className="mt-2 text-amber-500 hover:text-amber-400 text-sm"
+              className="zoom-click mt-2 text-cyan-300 hover:text-cyan-200 text-sm"
             >
               Clear filters
             </button>
@@ -197,10 +197,10 @@ function FilterPill({
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+      className={`zoom-click px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
         active
-          ? "bg-amber-600 text-white"
-          : "bg-stone-800 text-stone-400 hover:bg-stone-700 hover:text-stone-300"
+          ? "bg-gradient-to-r from-violet-500 to-cyan-500 text-white"
+          : "glass-card text-slate-200 hover:bg-slate-700/60 hover:text-white"
       }`}
     >
       {children}
@@ -212,25 +212,25 @@ function TermCard({ term }: { term: HandbookTerm }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-stone-900 rounded-xl border border-stone-800 p-5 hover:border-stone-700 transition-colors">
+    <div className="glass-card zoom-hover rounded-xl p-5 hover:border-violet-300/30 transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-white text-sm">{term.name}</h3>
           {term.originalTerm && (
-            <p className="text-xs text-stone-500 italic mt-0.5">
+            <p className="text-xs text-slate-300 italic mt-0.5">
               {term.originalTerm}
             </p>
           )}
         </div>
         <Link
           href={`/temples?tag=${encodeURIComponent(term.graphTag)}`}
-          className="flex-shrink-0 px-2.5 py-1 text-xs bg-amber-600/15 text-amber-400 rounded-lg hover:bg-amber-600/25 transition-colors font-medium"
+          className="zoom-click flex-shrink-0 px-2.5 py-1 text-xs bg-cyan-500/20 text-cyan-300 rounded-lg hover:bg-cyan-500/30 transition-colors font-medium"
         >
           View temples
         </Link>
       </div>
 
-      <p className="text-sm text-stone-400 mt-3 leading-relaxed">
+      <p className="text-sm text-slate-200 mt-3 leading-relaxed">
         {term.shortDescription}
       </p>
 
@@ -238,12 +238,12 @@ function TermCard({ term }: { term: HandbookTerm }) {
         <>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="text-xs text-amber-500 hover:text-amber-400 mt-2 font-medium"
+            className="zoom-click text-xs text-cyan-300 hover:text-cyan-200 mt-2 font-medium"
           >
             {expanded ? "Show less" : "Read more"}
           </button>
           {expanded && (
-            <p className="text-sm text-stone-400 mt-2 leading-relaxed border-t border-stone-800 pt-3">
+            <p className="text-sm text-slate-200 mt-2 leading-relaxed border-t border-white/10 pt-3">
               {term.fullDescription}
             </p>
           )}

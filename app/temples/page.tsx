@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import type { Temple } from "@/lib/types";
+import type { Temple, HandbookTerm } from "@/lib/types";
 import { formatYear } from "@/lib/utils";
 import { FeatureBadgeGroup } from "@/components/FeatureBadge";
 import handbookData from "@/data/handbook.json";
-import type { HandbookTerm } from "@/lib/types";
 
 const handbook = handbookData as HandbookTerm[];
 
 function getTagFromUrl(): string | null {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(window.location.search);
+  if (typeof globalThis.window === "undefined") return null;
+  const params = new URLSearchParams(globalThis.window.location.search);
   return params.get("tag");
 }
 
@@ -41,8 +40,8 @@ export default function TemplesListPage() {
   const term = tag ? handbook.find((t) => t.graphTag === tag) : null;
 
   return (
-    <div className="min-h-screen bg-stone-950">
-      <header className="border-b border-stone-800">
+    <div className="min-h-screen bg-background">
+      <header className="glass-surface border-b border-white/10">
         <div className="max-w-6xl mx-auto px-5 py-6">
           <div className="flex items-center gap-3 mb-1 text-sm">
             <Link
@@ -51,28 +50,28 @@ export default function TemplesListPage() {
             >
               OTDB
             </Link>
-            <span className="text-stone-700">/</span>
-            <span className="text-stone-400">Temples</span>
+            <span className="text-slate-500">/</span>
+            <span className="text-slate-300">Temples</span>
           </div>
           {term ? (
             <>
-              <h1 className="text-2xl font-bold text-white mt-3">
+              <h1 className="text-2xl font-bold text-white mt-3 tracking-tight">
                 {term.name}
               </h1>
-              <p className="text-stone-400 mt-1.5 text-sm max-w-2xl">
+              <p className="text-slate-200 mt-1.5 text-sm max-w-2xl">
                 {term.shortDescription}
               </p>
-              <p className="text-amber-400 mt-2 text-sm font-semibold">
+              <p className="text-cyan-300 mt-2 text-sm font-semibold">
                 {temples.length} temple{temples.length !== 1 ? "s" : ""} with
                 this feature
               </p>
             </>
           ) : (
             <>
-              <h1 className="text-2xl font-bold text-white mt-3">
+              <h1 className="text-2xl font-bold text-white mt-3 tracking-tight">
                 All Temples
               </h1>
-              <p className="text-stone-400 mt-1.5 text-sm">
+              <p className="text-slate-200 mt-1.5 text-sm">
                 {temples.length} temples in the database
               </p>
             </>
@@ -82,17 +81,17 @@ export default function TemplesListPage() {
 
       <div className="max-w-6xl mx-auto px-5 py-6">
         {tag && (
-          <div className="mb-6 flex items-center gap-3">
+          <div className="mb-6 flex items-center gap-3 glass-card rounded-xl px-4 py-2">
             <Link
               href="/temples"
-              className="text-sm text-stone-500 hover:text-stone-300 transition-colors"
+              className="text-sm text-slate-300 hover:text-slate-100 transition-colors"
             >
               Clear filter
             </Link>
-            <span className="text-stone-700">|</span>
+            <span className="text-slate-500">|</span>
             <Link
               href="/handbook"
-              className="text-sm text-amber-500 hover:text-amber-400 transition-colors"
+              className="text-sm text-cyan-300 hover:text-cyan-200 transition-colors"
             >
               Learn more in the Handbook
             </Link>
@@ -104,10 +103,10 @@ export default function TemplesListPage() {
             <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : temples.length === 0 ? (
-          <div className="text-center py-20 text-stone-500">
+          <div className="text-center py-20 text-slate-300">
             <p className="text-lg">No temples found.</p>
             {tag && (
-              <p className="text-sm mt-1 text-stone-600">
+              <p className="text-sm mt-1 text-slate-400">
                 No temples have been tagged with this feature yet.
               </p>
             )}
@@ -139,15 +138,15 @@ function TempleCard({ temple }: { temple: Temple }) {
   return (
     <Link
       href={`/temple/${temple.id}`}
-      className="block bg-stone-900 rounded-xl border border-stone-800 overflow-hidden hover:border-stone-600 transition-all hover:shadow-lg hover:shadow-stone-950"
+      className="glass-card zoom-hover block rounded-2xl overflow-hidden hover:border-violet-300/30 transition-all"
     >
-      <div className="h-40 bg-stone-800 overflow-hidden">
+      <div className="h-40 bg-slate-900 overflow-hidden">
         {!imgFailed ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={imgSrc}
             alt={temple.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
             loading="lazy"
             referrerPolicy="no-referrer"
             onError={() => {
@@ -161,7 +160,7 @@ function TempleCard({ temple }: { temple: Temple }) {
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <svg
-              className="w-10 h-10 text-stone-700"
+              className="w-10 h-10 text-slate-700"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -189,7 +188,7 @@ function TempleCard({ temple }: { temple: Temple }) {
             {temple.religion}
           </span>
         </div>
-        <div className="flex items-center gap-2 mt-1.5 text-xs text-stone-500">
+        <div className="flex items-center gap-2 mt-1.5 text-xs text-slate-300">
           {dateStr && <span>{dateStr}</span>}
           {dateStr && temple.country && <span>&middot;</span>}
           {temple.country && <span>{temple.country}</span>}

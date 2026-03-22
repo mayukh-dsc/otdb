@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0c0a09;
-  --foreground: #fafaf9;
-  --surface: #1c1917;
-  --surface-raised: #292524;
-  --border: #44403c;
-  --border-subtle: #292524;
-  --text-primary: #fafaf9;
-  --text-secondary: #a8a29e;
-  --text-muted: #78716c;
-  --accent: #d97706;
-  --accent-light: #fbbf24;
-  --accent-muted: rgba(217, 119, 6, 0.15);
-  --accent-secondary: #8b5cf6;
-  --accent-secondary-muted: rgba(139, 92, 246, 0.15);
+  --background: #070b16;
+  --foreground: #f6f8ff;
+  --surface: rgba(17, 24, 39, 0.5);
+  --surface-raised: rgba(30, 41, 59, 0.6);
+  --border: rgba(148, 163, 184, 0.35);
+  --border-subtle: rgba(148, 163, 184, 0.22);
+  --text-primary: #f6f8ff;
+  --text-secondary: #c7d2fe;
+  --text-muted: #94a3b8;
+  --accent: #7c3aed;
+  --accent-light: #22d3ee;
+  --accent-muted: rgba(124, 58, 237, 0.2);
+  --accent-secondary: #f472b6;
+  --accent-secondary-muted: rgba(244, 114, 182, 0.16);
 }
 
 @theme inline {
@@ -33,9 +33,13 @@
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(1100px 560px at 0% 0%, rgba(124, 58, 237, 0.18), transparent 70%),
+    radial-gradient(900px 480px at 100% 0%, rgba(34, 211, 238, 0.18), transparent 65%),
+    linear-gradient(180deg, #050913 0%, #070b16 45%, #080d1b 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Leaflet container must have explicit height */
@@ -47,9 +51,11 @@ body {
 
 /* Override leaflet popup styling */
 .leaflet-popup-content-wrapper {
-  border-radius: 12px !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2) !important;
-  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 40px rgba(6, 10, 22, 0.45) !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  background: rgba(15, 23, 42, 0.82) !important;
+  backdrop-filter: blur(14px);
 }
 
 .leaflet-popup-content {
@@ -58,6 +64,7 @@ body {
 
 .leaflet-popup-tip {
   box-shadow: none !important;
+  background: rgba(15, 23, 42, 0.82) !important;
 }
 
 /* Custom marker and cluster resets */
@@ -77,4 +84,51 @@ body {
 
 .img-placeholder svg {
   opacity: 0.2;
+}
+
+.glass-surface {
+  background: linear-gradient(
+    145deg,
+    rgba(15, 23, 42, 0.58) 0%,
+    rgba(30, 41, 59, 0.44) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  backdrop-filter: blur(18px) saturate(115%);
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
+  box-shadow:
+    0 14px 34px rgba(3, 7, 18, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: linear-gradient(
+    145deg,
+    rgba(15, 23, 42, 0.64) 0%,
+    rgba(30, 41, 59, 0.48) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 10px 26px rgba(3, 7, 18, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.zoom-hover {
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.zoom-hover:hover {
+  transform: translateY(-2px) scale(1.015);
+}
+
+.zoom-click {
+  transition: transform 150ms ease;
+}
+
+.zoom-click:active {
+  transform: scale(0.98);
 }
