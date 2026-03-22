@@ -125,7 +125,8 @@ export default function TemplesListPage() {
 }
 
 function TempleCard({ temple }: { temple: Temple }) {
-  const [imgError, setImgError] = useState(false);
+  const [imgSrc, setImgSrc] = useState(`/images/temples/${temple.id}.jpg`);
+  const [imgFailed, setImgFailed] = useState(false);
   const dateStr = temple.yearBuilt ? formatYear(temple.yearBuilt) : null;
 
   const religionColors: Record<string, string> = {
@@ -141,14 +142,21 @@ function TempleCard({ temple }: { temple: Temple }) {
       className="block bg-stone-900 rounded-xl border border-stone-800 overflow-hidden hover:border-stone-600 transition-all hover:shadow-lg hover:shadow-stone-950"
     >
       <div className="h-40 bg-stone-800 overflow-hidden">
-        {temple.imageUrl && !imgError ? (
+        {!imgFailed ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={temple.imageUrl}
+            src={imgSrc}
             alt={temple.name}
             className="w-full h-full object-cover"
+            loading="lazy"
             referrerPolicy="no-referrer"
-            onError={() => setImgError(true)}
+            onError={() => {
+              if (temple.imageUrl && imgSrc !== temple.imageUrl) {
+                setImgSrc(temple.imageUrl);
+              } else {
+                setImgFailed(true);
+              }
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

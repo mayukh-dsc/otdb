@@ -19,6 +19,7 @@ export default function TempleDetailPage() {
   const [temple, setTemple] = useState<Temple | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("Overview");
+  const [heroSrc, setHeroSrc] = useState(`/images/temples/${id}.jpg`);
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
@@ -120,16 +121,22 @@ export default function TempleDetailPage() {
       </header>
 
       {/* Hero Image */}
-      {temple.imageUrl && !imageError && (
+      {!imageError && (
         <div className="max-w-5xl mx-auto px-5 mt-6">
           <div className="rounded-xl overflow-hidden bg-stone-900 max-h-80">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={temple.imageUrl}
+              src={heroSrc}
               alt={temple.name}
               className="w-full h-80 object-cover"
               referrerPolicy="no-referrer"
-              onError={() => setImageError(true)}
+              onError={() => {
+                if (temple.imageUrl && heroSrc !== temple.imageUrl) {
+                  setHeroSrc(temple.imageUrl);
+                } else {
+                  setImageError(true);
+                }
+              }}
             />
           </div>
         </div>

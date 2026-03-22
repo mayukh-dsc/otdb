@@ -46,3 +46,6 @@ next-env.d.ts
 
 # screenshots
 /screenshots
+
+# downloaded temple images (reproducible via npm run download-images)
+/public/images/temples

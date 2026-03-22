@@ -106,7 +106,7 @@ export default function TempleDetailPanel({
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
         {/* Image */}
-        <TempleImage imageUrl={temple.imageUrl} alt={temple.name} />
+        <TempleImage templeId={temple.id} imageUrl={temple.imageUrl} alt={temple.name} />
 
         {/* Graph Tags */}
         {temple.graphTags && temple.graphTags.length > 0 && (
@@ -230,16 +230,19 @@ function TextSection({ title, text }: { title: string; text?: string | null }) {
 }
 
 function TempleImage({
+  templeId,
   imageUrl,
   alt,
 }: {
+  templeId: string;
   imageUrl?: string;
   alt: string;
 }) {
-  const [error, setError] = useState(false);
+  const [src, setSrc] = useState(`/images/temples/${templeId}.jpg`);
+  const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  if (!imageUrl || error) {
+  if (failed) {
     return (
       <div className="w-full h-44 bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center">
         <svg
@@ -252,14 +255,12 @@ function TempleImage({
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={1}
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
       </div>
     );
   }
-
-  const src = imageUrl.replace(/^http:/, "https:");
 
   return (
     <div className="w-full h-52 bg-stone-100 overflow-hidden relative">
@@ -275,7 +276,13 @@ function TempleImage({
         className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
         referrerPolicy="no-referrer"
         onLoad={() => setLoaded(true)}
-        onError={() => setError(true)}
+        onError={() => {
+          if (imageUrl && src !== imageUrl) {
+            setSrc(imageUrl.replace(/^http:/, "https:"));
+          } else {
+            setFailed(true);
+          }
+        }}
       />
     </div>
   );
