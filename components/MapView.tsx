@@ -32,11 +32,20 @@ const CARTO_VOYAGER =
 const CARTO_ATTR =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>';
 
-function createTempleIcon(religion: string, markerColor?: string): L.DivIcon {
+function createTempleIcon(
+  religion: string,
+  markerColor?: string,
+  compareBadge?: number
+): L.DivIcon {
   const color = markerColor || getReligionColor(religion);
+  const badge =
+    compareBadge != null
+      ? `<circle cx="24" cy="8" r="7" fill="#06b6d4" stroke="white" stroke-width="1.4"/>
+         <text x="24" y="12" text-anchor="middle" font-size="10" font-weight="bold" fill="white" font-family="system-ui">${compareBadge}</text>`
+      : "";
   return L.divIcon({
     className: "custom-marker",
-    html: `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="38" viewBox="0 0 30 38" style="filter: drop-shadow(0 3px 8px rgba(0,0,0,0.35));">
+    html: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="-1 -1 32 40" style="filter: drop-shadow(0 3px 8px rgba(0,0,0,0.35));">
       <g fill="${color}" stroke="white" stroke-width="1.4" stroke-linejoin="round">
         <circle cx="15" cy="4" r="2.4"/>
         <path d="M8.5 17 L15 7 L21.5 17Z"/>
@@ -44,8 +53,9 @@ function createTempleIcon(religion: string, markerColor?: string): L.DivIcon {
         <rect x="4.5" y="29" width="21" height="5" rx="1.2"/>
       </g>
       <path d="M11.7 34 V25.2 Q15 21.2 18.3 25.2 V34Z" fill="white" stroke="none"/>
+      ${badge}
     </svg>`,
-    iconSize: [30, 38],
+    iconSize: [32, 40],
     iconAnchor: [15, 38],
     popupAnchor: [0, -36],
   });
@@ -80,6 +90,8 @@ interface MapViewProps {
   onSelectTemple: (temple: Temple) => void;
   similarityMode: SimilarityMode;
   visibleConnectionGroups?: string[];
+  compareMode?: boolean;
+  comparedTempleIds?: Set<string>;
 }
 
 function SimilarityLines({ edges }: { edges: SimilarityEdge[] }) {
@@ -124,6 +136,8 @@ export default function MapView({
   onSelectTemple,
   similarityMode,
   visibleConnectionGroups,
+  compareMode,
+  comparedTempleIds,
 }: MapViewProps) {
   const markerRefs = useRef<Map<string, L.Marker>>(new Map());
 
@@ -149,7 +163,16 @@ export default function MapView({
     return byId;
   }, [temples, similarityMode]);
 
-  // selectedTempleId reserved for future fly-to behavior
+  const compareBadgeMap = useMemo(() => {
+    if (!compareMode || !comparedTempleIds || comparedTempleIds.size === 0)
+      return new Map<string, number>();
+    const map = new Map<string, number>();
+    let idx = 1;
+    for (const id of comparedTempleIds) {
+      map.set(id, idx++);
+    }
+    return map;
+  }, [compareMode, comparedTempleIds]);
 
   return (
     <MapContainer
@@ -172,7 +195,8 @@ export default function MapView({
           position={[temple.latitude, temple.longitude]}
           icon={createTempleIcon(
             temple.religion,
-            markerColorsByTempleId.get(temple.id)
+            markerColorsByTempleId.get(temple.id),
+            compareBadgeMap.get(temple.id)
           )}
           ref={(ref) => {
             if (ref) markerRefs.current.set(temple.id, ref);

@@ -12,6 +12,8 @@ import {
 } from "@/lib/similarityEdges";
 import TimeRangeSlider from "@/components/TimeRangeSlider";
 import TempleDetailPanel from "@/components/TempleDetailPanel";
+import ComparisonTray from "@/components/ComparisonTray";
+import ComparisonModal from "@/components/ComparisonModal";
 import { getTempleImageCandidatesFromTemple } from "@/lib/templeImage";
 
 const MapView = lazy(() => import("@/components/MapView"));
@@ -28,6 +30,10 @@ export default function Home() {
   const [similarityMode, setSimilarityMode] = useState<SimilarityMode>("off");
   const [visibleConnectionGroups, setVisibleConnectionGroups] = useState<string[]>([]);
   const [groupFilterInitialized, setGroupFilterInitialized] = useState(false);
+
+  const [compareMode, setCompareMode] = useState(false);
+  const [comparedTemples, setComparedTemples] = useState<Temple[]>([]);
+  const [comparisonOpen, setComparisonOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/temples")
@@ -164,6 +170,33 @@ export default function Home() {
     setTimeout(() => setSelectedTemple(null), 300);
   };
 
+  const handleCompareModeToggle = () => {
+    setCompareMode((prev) => !prev);
+    setComparedTemples([]);
+    setComparisonOpen(false);
+  };
+
+  const handleSelectTempleForCompare = (temple: Temple) => {
+    setComparedTemples((prev) => {
+      if (prev.some((t) => t.id === temple.id)) return prev;
+      if (prev.length >= 3) return prev;
+      return [...prev, temple];
+    });
+  };
+
+  const handleRemoveComparedTemple = (id: string) => {
+    setComparedTemples((prev) => {
+      const next = prev.filter((t) => t.id !== id);
+      if (next.length < 2) setComparisonOpen(false);
+      return next;
+    });
+  };
+
+  const comparedTempleIds = useMemo(
+    () => new Set(comparedTemples.map((t) => t.id)),
+    [comparedTemples]
+  );
+
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden bg-background">
       {/* Header */}
@@ -187,6 +220,20 @@ export default function Home() {
               / {filteredTemples.length} visible (time) / {temples.length} total
             </span>
           </span>
+          <button
+            onClick={handleCompareModeToggle}
+            className={`zoom-click hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-xl border transition-all ${
+              compareMode
+                ? "bg-cyan-600 text-white border-cyan-400 shadow-md shadow-cyan-500/30"
+                : "glass-card text-slate-200 border-border-subtle hover:text-white hover:bg-surface-raised"
+            }`}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="3" width="8" height="18" rx="1" />
+              <rect x="14" y="3" width="8" height="18" rx="1" />
+            </svg>
+            {compareMode ? "Comparing…" : "Compare"}
+          </button>
           <nav className="hidden sm:flex items-center gap-1 glass-card rounded-xl p-1">
             <NavLink href="/handbook">Handbook</NavLink>
             <NavLink href="/temples">Browse</NavLink>
@@ -244,9 +291,11 @@ export default function Home() {
               <MapView
                 temples={connectionFilteredTemples}
                 selectedTempleId={selectedTemple?.id ?? null}
-                onSelectTemple={handleSelectTemple}
+                onSelectTemple={compareMode ? handleSelectTempleForCompare : handleSelectTemple}
                 similarityMode={similarityMode}
                 visibleConnectionGroups={resolvedVisibleConnectionGroups}
+                compareMode={compareMode}
+                comparedTempleIds={comparedTempleIds}
               />
             </Suspense>
           )}
@@ -271,6 +320,23 @@ export default function Home() {
             onClick={handleClosePanel}
             aria-label="Close panel"
             tabIndex={-1}
+          />
+        )}
+
+        {compareMode && (
+          <ComparisonTray
+            temples={comparedTemples}
+            onRemove={handleRemoveComparedTemple}
+            onCompare={() => setComparisonOpen(true)}
+            onCancel={handleCompareModeToggle}
+          />
+        )}
+
+        {comparisonOpen && (
+          <ComparisonModal
+            temples={comparedTemples}
+            onRemove={handleRemoveComparedTemple}
+            onClose={() => setComparisonOpen(false)}
           />
         )}
 
@@ -304,6 +370,16 @@ export default function Home() {
 
       {/* Mobile connections (below map on small screens) */}
       <div className="sm:hidden glass-surface border-t border-border-subtle px-4 py-2 flex items-center gap-2 overflow-x-auto flex-shrink-0">
+        <button
+          onClick={handleCompareModeToggle}
+          className={`zoom-click shrink-0 flex items-center gap-1 px-2 py-1 text-xs rounded-lg font-medium whitespace-nowrap transition-all ${
+            compareMode
+              ? "bg-cyan-600 text-white shadow-md shadow-cyan-500/30"
+              : "text-slate-200 glass-card"
+          }`}
+        >
+          {compareMode ? "Exit" : "Compare"}
+        </button>
         <span className="text-xs text-slate-200 whitespace-nowrap">Lines:</span>
         {SIMILARITY_MODES.map((mode) => (
           <button
