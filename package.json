@@ -22,7 +22,6 @@
     "react-zoom-pan-pinch": "^3.7.0"
   },
   "devDependencies": {
-    "npm-compare": "file:../npm-compare",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/better-sqlite3": "^7.6.13",
@@ -33,6 +32,7 @@
     "better-sqlite3": "^12.8.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "npm-compare": "file:../npm-compare",
     "playwright": "^1.58.2",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",

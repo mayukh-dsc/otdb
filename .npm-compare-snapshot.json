@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-04T07:28:31.395Z",
+  "generatedAt": "2026-04-05T10:21:12.727Z",
   "projectName": "otdb",
   "projectVersion": "0.1.0",
   "nodeVersion": "v20.18.1",
@@ -1722,22 +1722,6 @@
       "version": "4.4.3",
       "integrity": "sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==",
       "resolved": "https://registry.npmjs.org/debug/-/debug-4.4.3.tgz",
-      "dev": true,
-      "optional": false
-    },
-    {
-      "name": "debug",
-      "version": "3.2.7",
-      "integrity": "sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==",
-      "resolved": "https://registry.npmjs.org/debug/-/debug-3.2.7.tgz",
-      "dev": true,
-      "optional": false
-    },
-    {
-      "name": "debug",
-      "version": "3.2.7",
-      "integrity": "sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==",
-      "resolved": "https://registry.npmjs.org/debug/-/debug-3.2.7.tgz",
       "dev": true,
       "optional": false
     },
@@ -3567,35 +3551,11 @@
     },
     {
       "name": "semver",
-      "version": "7.7.4",
-      "integrity": "sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.7.4.tgz",
-      "dev": true,
-      "optional": false
-    },
-    {
-      "name": "semver",
-      "version": "7.7.4",
-      "integrity": "sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.7.4.tgz",
-      "dev": true,
-      "optional": false
-    },
-    {
-      "name": "semver",
       "version": "6.3.1",
       "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",
       "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz",
       "dev": true,
       "optional": false
-    },
-    {
-      "name": "semver",
-      "version": "7.7.4",
-      "integrity": "sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-7.7.4.tgz",
-      "dev": false,
-      "optional": true
     },
     {
       "name": "set-function-length",
