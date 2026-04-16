@@ -23,10 +23,10 @@ function unique(values: Array<string | undefined>): string[] {
 /**
  * Returns candidate image URLs in preference order:
  * 1) Blob/CDN URL (when NEXT_PUBLIC_TEMPLE_IMAGE_BASE_URL is configured)
- * 2) Without Blob: in development, local /public/images/temples first (downloaded assets).
- *    In production, remote URL first — static files are not deployed on Vercel (gitignored),
- *    so trying local only causes 404s before Wikimedia fallback.
- * 3) Remaining fallbacks (local and/or remote)
+ * 2) Without Blob: in development, local /public/images/temples (downloaded assets), then remote.
+ *    In production, remote only — gitignored files are not on the CDN; including /images/temples/
+ *    as a fallback after a failed remote load only produces 404 noise and keeps the panel blank.
+ * 3) With Blob: Blob, then local, then remote (same as before).
  */
 export function getTempleImageCandidates(
   templeId: string,
@@ -43,7 +43,7 @@ export function getTempleImageCandidates(
   if (process.env.NODE_ENV === "development") {
     return unique([localUrl, remoteUrl]);
   }
-  return unique([remoteUrl, localUrl]);
+  return unique([remoteUrl]);
 }
 
 export function getTempleImageCandidatesFromTemple(temple: Temple): string[] {
